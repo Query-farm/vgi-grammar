@@ -1,0 +1,128 @@
+# name: test/sql/grammar.test
+# group: [vgi_grammar]
+#
+# grammar_check / grammar_count / is_grammatical / correct over LanguageTool.
+
+require-env VGI_GRAMMAR_WORKER
+
+statement ok
+LOAD vgi;
+
+statement ok
+ATTACH 'grammar' AS grammar (TYPE vgi, LOCATION '${VGI_GRAMMAR_WORKER}');
+
+# ---- grammar_count: a known agreement error has issues ----------------------
+
+query I
+SELECT grammar.grammar_count('She go to school.') > 0;
+----
+true
+
+# a clean sentence has zero issues.
+query I
+SELECT grammar.grammar_count('This sentence is correct.');
+----
+0
+
+# NULL text -> NULL count.
+query I
+SELECT grammar.grammar_count(NULL);
+----
+NULL
+
+# two-arg overload with an explicit language.
+query I
+SELECT grammar.grammar_count('She go to school.', 'en-US') > 0;
+----
+true
+
+# ---- is_grammatical ---------------------------------------------------------
+
+query I
+SELECT grammar.is_grammatical('This sentence is correct.');
+----
+true
+
+query I
+SELECT grammar.is_grammatical('She go to school every day.');
+----
+false
+
+# ---- grammar_check: one row per issue, with suggestions ---------------------
+
+query I
+SELECT count(*) > 0 FROM grammar.grammar_check('She go to school every day.');
+----
+true
+
+# every issue row has the headline columns populated; suggestions is VARCHAR[].
+query I
+SELECT count(*) > 0
+FROM grammar.grammar_check('She go to school every day.')
+WHERE rule_id IS NOT NULL AND category IS NOT NULL AND message IS NOT NULL
+  AND "offset" >= 0 AND length > 0;
+----
+true
+
+# the agreement error suggests "goes" — surfaced via UNNEST(suggestions).
+query I
+SELECT count(*) > 0 FROM (
+    SELECT UNNEST(suggestions) AS s
+    FROM grammar.grammar_check('She go to school every day.')
+) WHERE s = 'goes';
+----
+true
+
+# a spelling error gets at least one suggestion.
+query I
+SELECT count(*) > 0 FROM (
+    SELECT UNNEST(suggestions) AS s
+    FROM grammar.grammar_check('I havv a problemm.')
+) WHERE s IS NOT NULL;
+----
+true
+
+# NULL / empty text -> no rows.
+query I
+SELECT count(*) FROM grammar.grammar_check(NULL);
+----
+0
+
+query I
+SELECT count(*) FROM grammar.grammar_check('');
+----
+0
+
+# ---- correct: apply the first suggestion of each issue ----------------------
+
+query I
+SELECT grammar.correct('She go to school every day.') LIKE '%goes%';
+----
+true
+
+# the agreement error is gone after correction.
+query I
+SELECT grammar.correct('She go to school every day.') NOT LIKE '%She go to%';
+----
+true
+
+# clean text is returned unchanged.
+query I
+SELECT grammar.correct('This sentence is correct.');
+----
+This sentence is correct.
+
+# two-arg overload.
+query I
+SELECT grammar.correct('She go to school every day.', 'en-US') LIKE '%goes%';
+----
+true
+
+# NULL text -> NULL.
+query I
+SELECT grammar.correct(NULL) IS NULL;
+----
+true
+
+statement ok
+DETACH grammar;
