@@ -4,7 +4,9 @@
 
 <p align="center"><em>A <a href="https://query.farm">Query.Farm</a> VGI worker for DuckDB.</em></p>
 
-# vgi-grammar
+# Grammar, Style & Spell Checking with Auto-Correct in DuckDB
+
+> **vgi-grammar** · a [Query.Farm](https://query.farm) VGI worker · powered by LanguageTool
 
 A [VGI](https://query.farm) worker (Java) that checks **grammar, style, and
 spelling** and **auto-corrects** text as DuckDB SQL functions, powered by
