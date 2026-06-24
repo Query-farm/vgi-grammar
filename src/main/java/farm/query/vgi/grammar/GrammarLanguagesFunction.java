@@ -33,6 +33,26 @@ public final class GrammarLanguagesFunction implements TableFunction {
                         "List the language codes accepted by the language argument of the grammar "
                                 + "functions (e.g. en-US, en-GB), with human-readable names.")
                 .withCategories("text", "grammar", "languagetool")
+                .withTags(Meta.objectTags(
+                        "Supported Grammar Languages",
+                        "List the language codes accepted by the `language` argument of the other "
+                                + "grammar functions (`grammar_check`, `grammar_count`, "
+                                + "`is_grammatical`, `correct`), each with a human-readable name. "
+                                + "Use it to discover valid `language` values before passing one, "
+                                + "or to build a picker UI. This worker ships English only "
+                                + "(`en-US`, `en-GB`, `en-CA`, ...), so the result lists the "
+                                + "English variants. Takes no arguments and always returns rows.",
+                        "## grammar_languages()\n\n"
+                                + "Lists every language code accepted by the `language` argument of "
+                                + "the grammar functions, with its human-readable name. This "
+                                + "worker ships English only.\n\n"
+                                + "Takes no arguments.\n\n"
+                                + "```sql\n"
+                                + "SELECT code, name FROM grammar.main.grammar_languages();\n"
+                                + "```",
+                        "languages, language codes, locales, supported, en-US, en-GB, "
+                                + "list languages, discovery, dialects",
+                        "GrammarLanguagesFunction.java"))
                 .withTag("vgi.example_queries",
                         "[{\"sql\": \"SELECT * FROM grammar.main.grammar_languages();\", "
                                 + "\"description\": \"List every supported language code with its "
@@ -41,7 +61,11 @@ public final class GrammarLanguagesFunction implements TableFunction {
                                 + "WHERE code LIKE 'en%';\", "
                                 + "\"description\": \"Filter to the English variants accepted by the "
                                 + "language argument.\"}]")
-                .withTag("vgi.columns_md",
+                .withTag("vgi.executable_examples",
+                        "[{\"description\": \"List every supported language code with its "
+                                + "human-readable name.\", \"sql\": \"SELECT code, name FROM "
+                                + "grammar.main.grammar_languages() ORDER BY code\"}]")
+                .withTag("vgi.result_columns_md",
                         "| column | type | description |\n"
                                 + "|---|---|---|\n"
                                 + "| `code` | VARCHAR | Language code accepted by the language argument (e.g. en-US). |\n"

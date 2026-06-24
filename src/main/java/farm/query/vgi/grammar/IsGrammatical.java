@@ -58,11 +58,38 @@ abstract class IsGrammatical extends ScalarFn {
         @Override public FunctionMetadata metadata() {
             return FunctionMetadata.describe(description())
                     .withCategories("text", "grammar", "languagetool")
+                    .withTags(Meta.objectTags(
+                            "Is Text Grammatical",
+                            "Return `true` when a piece of text has zero grammar, style, and "
+                                    + "spelling issues according to LanguageTool, checked in the "
+                                    + "default language (`en-US`), and `false` otherwise. Use it as "
+                                    + "a boolean predicate to filter or validate text (e.g. "
+                                    + "`WHERE is_grammatical(comment)`), or as a cheap clean/dirty "
+                                    + "gate before invoking the fuller `grammar_check`. Returns a "
+                                    + "BOOLEAN; `NULL` input yields `NULL`. An unknown language is a "
+                                    + "hard, query-failing error.",
+                            "## is_grammatical(text)\n\n"
+                                    + "Returns `true` when `text` has no grammar/style/spelling "
+                                    + "issues in the default language (`en-US`), else `false`.\n\n"
+                                    + "Returns a `BOOLEAN`; `NULL` text returns `NULL`. Equivalent "
+                                    + "to `grammar_count(text) = 0`, but short-circuits.\n\n"
+                                    + "```sql\n"
+                                    + "SELECT grammar.main.is_grammatical('The quick brown fox "
+                                    + "jumps.');\n"
+                                    + "```",
+                            "is grammatical, valid, clean text, no errors, predicate, filter, "
+                                    + "boolean, grammar check, validate writing",
+                            "IsGrammatical.java"))
                     .withTag("vgi.example_queries",
                             "[{\"sql\": \"SELECT grammar.main.is_grammatical("
                                     + "'The quick brown fox jumps.');\", "
                                     + "\"description\": \"Test whether a sentence is free of issues "
                                     + "in the default language (returns true).\"}]")
+                    .withTag("vgi.executable_examples",
+                            "[{\"description\": \"Test whether a clean sentence is grammatical "
+                                    + "(default en-US).\", \"sql\": \"SELECT "
+                                    + "grammar.main.is_grammatical('The quick brown fox jumps.') "
+                                    + "AS ok\"}]")
                     .withExamples(List.of(new FunctionExample(
                             "SELECT grammar.main.is_grammatical('The quick brown fox jumps.');",
                             "Test whether a sentence is free of issues in the default language "
@@ -88,6 +115,27 @@ abstract class IsGrammatical extends ScalarFn {
         @Override public FunctionMetadata metadata() {
             return FunctionMetadata.describe(description())
                     .withCategories("text", "grammar", "languagetool")
+                    .withTags(Meta.objectTags(
+                            "Is Text Grammatical (Language)",
+                            "Return `true` when a piece of text has zero grammar, style, and "
+                                    + "spelling issues according to LanguageTool, checked in an "
+                                    + "explicit language code (e.g. `en-GB`). Behaves like the "
+                                    + "single-argument `is_grammatical` but lets you pick the "
+                                    + "dialect/locale, which changes which spellings and rules "
+                                    + "apply. Returns a BOOLEAN; `NULL` text yields `NULL`; an "
+                                    + "unknown language code is a hard, query-failing error.",
+                            "## is_grammatical(text, language)\n\n"
+                                    + "Returns `true` when `text` has no grammar/style/spelling "
+                                    + "issues in the given `language` code, else `false`.\n\n"
+                                    + "Returns a `BOOLEAN`; `NULL` text returns `NULL`. The language "
+                                    + "choice affects which spellings/rules apply.\n\n"
+                                    + "```sql\n"
+                                    + "SELECT grammar.main.is_grammatical('She don''t like it.', "
+                                    + "'en-US');\n"
+                                    + "```",
+                            "is grammatical, valid, clean text, language, locale, dialect, "
+                                    + "en-GB, predicate, filter, boolean, validate writing",
+                            "IsGrammatical.java"))
                     .withTag("vgi.example_queries",
                             "[{\"sql\": \"SELECT grammar.main.is_grammatical("
                                     + "'She don''t like it.', 'en-US');\", "

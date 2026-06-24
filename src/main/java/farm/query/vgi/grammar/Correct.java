@@ -63,11 +63,39 @@ abstract class Correct extends ScalarFn {
         @Override public FunctionMetadata metadata() {
             return FunctionMetadata.describe(description())
                     .withCategories("text", "grammar", "languagetool")
+                    .withTags(Meta.objectTags(
+                            "Auto-Correct Text",
+                            "Rewrite a piece of text by applying the first LanguageTool suggestion "
+                                    + "for each detected grammar, style, and spelling issue, using "
+                                    + "the default language (`en-US`). Suggestions are applied "
+                                    + "right-to-left and non-overlapping so earlier offsets stay "
+                                    + "valid. Use it to clean up free text inline in SQL. Returns a "
+                                    + "VARCHAR; `NULL` input yields `NULL`; text with no fixable "
+                                    + "issues is returned unchanged. Only the top suggestion per "
+                                    + "issue is applied, so the result is a best-effort fix, not a "
+                                    + "guaranteed perfect rewrite.",
+                            "## correct(text)\n\n"
+                                    + "Returns `text` with the first suggested fix applied to each "
+                                    + "issue, using the default language (`en-US`).\n\n"
+                                    + "Fixes are applied right-to-left and non-overlapping. Returns "
+                                    + "a `VARCHAR`; `NULL` text returns `NULL`; text with no fixable "
+                                    + "issues is unchanged. For the underlying issues/suggestions "
+                                    + "use `grammar_check`.\n\n"
+                                    + "```sql\n"
+                                    + "SELECT grammar.main.correct('She go to school evry day.');\n"
+                                    + "```",
+                            "correct, autocorrect, auto-correct, fix, rewrite, clean up, "
+                                    + "proofread, apply suggestions, spelling fix, grammar fix",
+                            "Correct.java"))
                     .withTag("vgi.example_queries",
                             "[{\"sql\": \"SELECT grammar.main.correct("
                                     + "'She go to school evry day.');\", "
                                     + "\"description\": \"Auto-correct a sentence in the default "
                                     + "language (fixes agreement and the 'evry' typo).\"}]")
+                    .withTag("vgi.executable_examples",
+                            "[{\"description\": \"Auto-correct a sentence in the default language.\", "
+                                    + "\"sql\": \"SELECT grammar.main.correct('She go to school evry "
+                                    + "day.') AS fixed\"}]")
                     .withExamples(List.of(new FunctionExample(
                             "SELECT grammar.main.correct('She go to school evry day.');",
                             "Auto-correct a sentence in the default language "
@@ -93,6 +121,29 @@ abstract class Correct extends ScalarFn {
         @Override public FunctionMetadata metadata() {
             return FunctionMetadata.describe(description())
                     .withCategories("text", "grammar", "languagetool")
+                    .withTags(Meta.objectTags(
+                            "Auto-Correct Text (Language)",
+                            "Rewrite a piece of text by applying the first LanguageTool suggestion "
+                                    + "for each detected grammar, style, and spelling issue, using "
+                                    + "an explicit language code (e.g. `en-GB`). Behaves like the "
+                                    + "single-argument `correct` but lets you pick the "
+                                    + "dialect/locale, which changes which spellings and rules "
+                                    + "apply. Returns a VARCHAR; `NULL` text yields `NULL`; text "
+                                    + "with no fixable issues is returned unchanged; an unknown "
+                                    + "language code is a hard, query-failing error.",
+                            "## correct(text, language)\n\n"
+                                    + "Returns `text` with the first suggested fix applied to each "
+                                    + "issue, using the given `language` code (e.g. `en-US`, "
+                                    + "`en-GB`).\n\n"
+                                    + "Fixes are applied right-to-left and non-overlapping. Returns "
+                                    + "a `VARCHAR`; `NULL` text returns `NULL`; text with no fixable "
+                                    + "issues is unchanged.\n\n"
+                                    + "```sql\n"
+                                    + "SELECT grammar.main.correct('I has two dog.', 'en-US');\n"
+                                    + "```",
+                            "correct, autocorrect, auto-correct, fix, rewrite, language, locale, "
+                                    + "dialect, en-GB, apply suggestions, proofread, clean up",
+                            "Correct.java"))
                     .withTag("vgi.example_queries",
                             "[{\"sql\": \"SELECT grammar.main.correct("
                                     + "'I has two dog.', 'en-US');\", "

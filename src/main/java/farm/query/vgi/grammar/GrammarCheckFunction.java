@@ -41,16 +41,45 @@ public final class GrammarCheckFunction implements TableFunction {
                                 + "returns one row per issue with suggested replacements. Accepts an "
                                 + "optional language argument (default en-US).")
                 .withCategories("text", "grammar", "languagetool")
+                .withTags(Meta.objectTags(
+                        "Grammar Check Issues",
+                        "Run LanguageTool over a piece of text and return one row per grammar, "
+                                + "style, or spelling issue it finds, each with the rule that "
+                                + "fired, its category, an explanatory message, the character "
+                                + "offset/length of the flagged span, the flagged substring, and an "
+                                + "ordered list of suggested replacements (best first). Accepts an "
+                                + "optional `language` argument (default `en-US`). Use it to "
+                                + "surface and explain every writing problem in detail; for a "
+                                + "simple count use `grammar_count`, for a boolean clean test use "
+                                + "`is_grammatical`, and to apply fixes use `correct`. `NULL` or "
+                                + "empty text yields no rows; an unknown language fails the query.",
+                        "## grammar_check(text [, language])\n\n"
+                                + "Returns one row per grammar/style/spelling issue LanguageTool "
+                                + "reports for `text`, with suggested replacements. Accepts an "
+                                + "optional `language` (default `en-US`).\n\n"
+                                + "`NULL` or empty text returns no rows; an unknown language fails "
+                                + "the query.\n\n"
+                                + "```sql\n"
+                                + "SELECT rule_id, message, suggestions\n"
+                                + "FROM grammar.main.grammar_check('She go to school every day.');\n"
+                                + "```",
+                        "grammar check, issues, errors, suggestions, rule, category, message, "
+                                + "offset, spelling, style, proofread, one row per issue",
+                        "GrammarCheckFunction.java"))
                 .withTag("vgi.example_queries",
                         "[{\"sql\": \"SELECT * FROM grammar.main.grammar_check("
                                 + "'She go to school every day.');\", "
                                 + "\"description\": \"List every grammar/spelling issue in a "
                                 + "sentence, one row each.\"}, "
                                 + "{\"sql\": \"SELECT rule_id, message, suggestions FROM "
-                                + "grammar.main.grammar_check('I has a apple.', 'en-US');\", "
+                                + "grammar.main.grammar_check('I has a apple.', language := 'en-US');\", "
                                 + "\"description\": \"Inspect the rule, message, and suggested "
                                 + "replacements for each issue in a specific language.\"}]")
-                .withTag("vgi.columns_md",
+                .withTag("vgi.executable_examples",
+                        "[{\"description\": \"List every grammar/spelling issue in a sentence, "
+                                + "one row each.\", \"sql\": \"SELECT rule_id, category, message "
+                                + "FROM grammar.main.grammar_check('She go to school every day.')\"}]")
+                .withTag("vgi.result_columns_md",
                         "| column | type | description |\n"
                                 + "|---|---|---|\n"
                                 + "| `rule_id` | VARCHAR | LanguageTool rule identifier that fired. |\n"

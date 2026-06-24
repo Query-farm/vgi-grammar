@@ -61,11 +61,40 @@ abstract class GrammarCount extends ScalarFn {
         @Override public FunctionMetadata metadata() {
             return FunctionMetadata.describe(description())
                     .withCategories("text", "grammar", "languagetool")
+                    .withTags(Meta.objectTags(
+                            "Count Grammar Issues",
+                            "Return the number of grammar, style, and spelling issues LanguageTool "
+                                    + "finds in a piece of text, checked in the default language "
+                                    + "(`en-US`). Use it to score or rank free text by writing "
+                                    + "quality, to gate content (e.g. `WHERE grammar_count(body) = "
+                                    + "0`), or as a quick health check before running the fuller "
+                                    + "`grammar_check` table function. Returns an INTEGER; "
+                                    + "`NULL` input yields `NULL`. A row that errors internally is "
+                                    + "skipped (counted as `NULL`), but an unknown language is a "
+                                    + "hard, query-failing error.",
+                            "## grammar_count(text)\n\n"
+                                    + "Counts grammar, style, and spelling issues in `text` using "
+                                    + "the default language (`en-US`).\n\n"
+                                    + "Returns an `INTEGER`. `NULL` text returns `NULL`. For the "
+                                    + "issue details use `grammar_check`; for a boolean clean/dirty "
+                                    + "test use `is_grammatical`.\n\n"
+                                    + "```sql\n"
+                                    + "SELECT grammar.main.grammar_count('She go to the store "
+                                    + "yesterday.');\n"
+                                    + "```",
+                            "grammar count, count issues, number of errors, writing score, "
+                                    + "quality, spelling count, grammar, default language",
+                            "GrammarCount.java"))
                     .withTag("vgi.example_queries",
                             "[{\"sql\": \"SELECT grammar.main.grammar_count("
                                     + "'She go to the store yesterday.');\", "
                                     + "\"description\": \"Count the grammar/spelling issues in a "
                                     + "sentence (default en-US).\"}]")
+                    .withTag("vgi.executable_examples",
+                            "[{\"description\": \"Count the grammar/spelling issues in a sentence "
+                                    + "(default en-US).\", \"sql\": \"SELECT "
+                                    + "grammar.main.grammar_count('She go to the store yesterday.') "
+                                    + "AS n\"}]")
                     .withExamples(List.of(new FunctionExample(
                             "SELECT grammar.main.grammar_count('She go to the store yesterday.');",
                             "Count the grammar/spelling issues in a sentence (default en-US).",
@@ -90,6 +119,28 @@ abstract class GrammarCount extends ScalarFn {
         @Override public FunctionMetadata metadata() {
             return FunctionMetadata.describe(description())
                     .withCategories("text", "grammar", "languagetool")
+                    .withTags(Meta.objectTags(
+                            "Count Grammar Issues (Language)",
+                            "Return the number of grammar, style, and spelling issues LanguageTool "
+                                    + "finds in a piece of text, checked in an explicit language "
+                                    + "code (e.g. `en-GB`, `en-CA`). Behaves like the single-argument "
+                                    + "`grammar_count` but lets you pick the dialect/locale, which "
+                                    + "changes which spellings and rules apply (e.g. `colour` is "
+                                    + "fine in `en-GB` but flagged in `en-US`). Returns an "
+                                    + "INTEGER; `NULL` text yields `NULL`; an unknown language code "
+                                    + "is a hard, query-failing error.",
+                            "## grammar_count(text, language)\n\n"
+                                    + "Counts grammar, style, and spelling issues in `text` using "
+                                    + "the given `language` code (e.g. `en-US`, `en-GB`).\n\n"
+                                    + "Returns an `INTEGER`. `NULL` text returns `NULL`. The "
+                                    + "language choice affects which spellings/rules apply.\n\n"
+                                    + "```sql\n"
+                                    + "SELECT grammar.main.grammar_count('I love this colour.', "
+                                    + "'en-US');\n"
+                                    + "```",
+                            "grammar count, count issues, language, locale, dialect, en-GB, "
+                                    + "en-US, number of errors, spelling count, grammar",
+                            "GrammarCount.java"))
                     .withTag("vgi.example_queries",
                             "[{\"sql\": \"SELECT grammar.main.grammar_count("
                                     + "'I love this colour.', 'en-US');\", "

@@ -29,14 +29,19 @@ public final class Main {
     /** Catalog-level metadata tags surfaced to DuckDB and the vgi-lint linter. */
     private static Map<String, String> catalogTags() {
         Map<String, String> t = new LinkedHashMap<>();
-        t.put("vgi.description_llm",
+        t.put("vgi.title", "Grammar, Style & Spelling Checker");
+        t.put("vgi.keywords",
+                "grammar, spelling, spell check, style, proofread, proofreading, "
+                        + "correct, autocorrect, languagetool, text quality, writing, linter, "
+                        + "grammar check, typos, punctuation");
+        t.put("vgi.doc_llm",
                 "Check grammar, style, and spelling of free text with LanguageTool and "
                         + "auto-correct it, directly in SQL. Use to find writing issues (one row "
                         + "per problem with rule, category, message, the flagged span, and suggested "
                         + "replacements), count issues, test whether text is clean, rewrite text by "
                         + "applying the top suggestion, and list the supported language codes. "
                         + "English (en-US, en-GB, en-CA, ...) is shipped.");
-        t.put("vgi.description_md",
+        t.put("vgi.doc_md",
                 "# grammar\n\n"
                         + "Grammar, style, and spelling checking plus auto-correction powered by "
                         + "[LanguageTool](https://languagetool.org), exposed as DuckDB SQL functions "
@@ -58,13 +63,39 @@ public final class Main {
     /** Schema-level metadata tags for the single {@code main} schema. */
     private static Map<String, String> schemaTags() {
         Map<String, String> t = new LinkedHashMap<>();
-        t.put("vgi.description_llm",
+        t.put("vgi.title", "Grammar — main");
+        t.put("vgi.keywords",
+                "grammar, spelling, style, proofreading, languagetool, "
+                        + "grammar_check, grammar_count, is_grammatical, correct, "
+                        + "grammar_languages, text quality, writing");
+        // VGI123 classifying tags MUST use BARE keys (not vgi.-namespaced).
+        t.put("domain", "text");
+        t.put("category", "grammar-and-style");
+        t.put("topic", "proofreading");
+        t.put("vgi.source_url",
+                "https://github.com/Query-farm/vgi-grammar/blob/main/"
+                        + "src/main/java/farm/query/vgi/grammar/Main.java");
+        t.put("vgi.doc_llm",
                 "Grammar, style, and spelling functions: check text and get one row per issue "
                         + "with suggested fixes, count issues, test whether text is grammatical, "
-                        + "auto-correct text, and list supported language codes.");
-        t.put("vgi.description_md",
-                "Grammar, style, and spelling checking and auto-correction functions "
-                        + "(LanguageTool) over Apache Arrow.");
+                        + "auto-correct text, and list supported language codes. Every function "
+                        + "accepts an optional language argument (default en-US).");
+        t.put("vgi.doc_md",
+                "## grammar.main\n\n"
+                        + "Grammar, style, and spelling checking and auto-correction over Apache "
+                        + "Arrow, powered by LanguageTool.\n\n"
+                        + "- `grammar_check(text [, language])` — one row per issue with suggestions\n"
+                        + "- `grammar_count(text [, language])` — number of issues\n"
+                        + "- `is_grammatical(text [, language])` — true when text is clean\n"
+                        + "- `correct(text [, language])` — auto-corrected text\n"
+                        + "- `grammar_languages()` — supported language codes\n\n"
+                        + "The `language` argument defaults to `en-US`.");
+        t.put("vgi.example_queries",
+                "SELECT * FROM grammar.main.grammar_check('She go to school every day.');\n"
+                        + "SELECT grammar.main.grammar_count('I has two dog.');\n"
+                        + "SELECT grammar.main.is_grammatical('The quick brown fox jumps.');\n"
+                        + "SELECT grammar.main.correct('She go to school evry day.');\n"
+                        + "SELECT * FROM grammar.main.grammar_languages();");
         return t;
     }
 
