@@ -38,8 +38,28 @@ public final class GrammarCheckFunction implements TableFunction {
     @Override public FunctionMetadata metadata() {
         return FunctionMetadata.describe(
                         "Check grammar, style, and spelling of a piece of text with LanguageTool; "
-                                + "returns one row per issue with suggested replacements.")
-                .withCategories("text", "grammar", "languagetool");
+                                + "returns one row per issue with suggested replacements. Accepts an "
+                                + "optional language argument (default en-US).")
+                .withCategories("text", "grammar", "languagetool")
+                .withTag("vgi.example_queries",
+                        "[{\"sql\": \"SELECT * FROM grammar.main.grammar_check("
+                                + "'She go to school every day.');\", "
+                                + "\"description\": \"List every grammar/spelling issue in a "
+                                + "sentence, one row each.\"}, "
+                                + "{\"sql\": \"SELECT rule_id, message, suggestions FROM "
+                                + "grammar.main.grammar_check('I has a apple.', 'en-US');\", "
+                                + "\"description\": \"Inspect the rule, message, and suggested "
+                                + "replacements for each issue in a specific language.\"}]")
+                .withTag("vgi.columns_md",
+                        "| column | type | description |\n"
+                                + "|---|---|---|\n"
+                                + "| `rule_id` | VARCHAR | LanguageTool rule identifier that fired. |\n"
+                                + "| `category` | VARCHAR | Human-readable rule category (e.g. Grammar, Typos). |\n"
+                                + "| `message` | VARCHAR | Explanation of the issue. |\n"
+                                + "| `offset` | INTEGER | 0-based character offset of the issue in the input text. |\n"
+                                + "| `length` | INTEGER | Character length of the flagged span. |\n"
+                                + "| `bad_text` | VARCHAR | The flagged substring of the input text. |\n"
+                                + "| `suggestions` | VARCHAR[] | Suggested replacements, best first (may be empty). |");
     }
 
     @Override public List<ArgSpec> argumentSpecs() {

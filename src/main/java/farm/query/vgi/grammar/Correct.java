@@ -2,12 +2,15 @@ package farm.query.vgi.grammar;
 
 import farm.query.vgi.function.Arguments;
 import farm.query.vgi.function.FunctionMetadata;
+import farm.query.vgi.protocol.FunctionExample;
 import farm.query.vgi.scalar.ScalarFn;
 import farm.query.vgi.types.Schemas;
 import org.apache.arrow.vector.VarCharVector;
 import org.apache.arrow.vector.types.pojo.ArrowType;
 import org.apache.arrow.vector.types.pojo.Schema;
 import org.apache.arrow.vector.util.Text;
+
+import java.util.List;
 
 /**
  * {@code grammar.correct(text [, language]) -> VARCHAR} — apply the first
@@ -22,14 +25,6 @@ abstract class Correct extends ScalarFn {
     Correct(GrammarEngine engine) { this.engine = engine; }
 
     @Override public final String name() { return "correct"; }
-
-    @Override public final String description() {
-        return "Auto-correct text by applying the first LanguageTool suggestion for each issue.";
-    }
-
-    @Override public final FunctionMetadata metadata() {
-        return FunctionMetadata.describe(description()).withCategories("text", "grammar", "languagetool");
-    }
 
     @Override protected final ArrowType outputType(Schema inputSchema, Arguments args) {
         return Schemas.UTF8;
@@ -60,6 +55,26 @@ abstract class Correct extends ScalarFn {
         public OneArg() { super(GrammarEngine.shared()); }
         public OneArg(GrammarEngine engine) { super(engine); }
 
+        @Override public String description() {
+            return "Auto-correct text by applying the first LanguageTool suggestion for each "
+                    + "issue, using the default language (en-US).";
+        }
+
+        @Override public FunctionMetadata metadata() {
+            return FunctionMetadata.describe(description())
+                    .withCategories("text", "grammar", "languagetool")
+                    .withTag("vgi.example_queries",
+                            "[{\"sql\": \"SELECT grammar.main.correct("
+                                    + "'She go to school evry day.');\", "
+                                    + "\"description\": \"Auto-correct a sentence in the default "
+                                    + "language (fixes agreement and the 'evry' typo).\"}]")
+                    .withExamples(List.of(new FunctionExample(
+                            "SELECT grammar.main.correct('She go to school evry day.');",
+                            "Auto-correct a sentence in the default language "
+                                    + "(fixes agreement and the 'evry' typo).",
+                            "")));
+        }
+
         public void compute(@farm.query.vgi.scalar.Vector("text") VarCharVector in, VarCharVector out) {
             run(in, GrammarEngine.DEFAULT_LANGUAGE, out);
         }
@@ -69,6 +84,26 @@ abstract class Correct extends ScalarFn {
     public static final class TwoArg extends Correct {
         public TwoArg() { super(GrammarEngine.shared()); }
         public TwoArg(GrammarEngine engine) { super(engine); }
+
+        @Override public String description() {
+            return "Auto-correct text by applying the first LanguageTool suggestion for each "
+                    + "issue, using an explicit language (e.g. en-GB).";
+        }
+
+        @Override public FunctionMetadata metadata() {
+            return FunctionMetadata.describe(description())
+                    .withCategories("text", "grammar", "languagetool")
+                    .withTag("vgi.example_queries",
+                            "[{\"sql\": \"SELECT grammar.main.correct("
+                                    + "'I has two dog.', 'en-US');\", "
+                                    + "\"description\": \"Auto-correct text in a specific language "
+                                    + "(fixes verb and noun agreement).\"}]")
+                    .withExamples(List.of(new FunctionExample(
+                            "SELECT grammar.main.correct('I has two dog.', 'en-US');",
+                            "Auto-correct text in a specific language "
+                                    + "(fixes verb and noun agreement).",
+                            "")));
+        }
 
         public void compute(@farm.query.vgi.scalar.Vector("text") VarCharVector in,
                             @farm.query.vgi.scalar.Const("language") String language,

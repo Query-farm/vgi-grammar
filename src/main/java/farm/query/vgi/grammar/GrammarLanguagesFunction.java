@@ -30,8 +30,22 @@ public final class GrammarLanguagesFunction implements TableFunction {
 
     @Override public FunctionMetadata metadata() {
         return FunctionMetadata.describe(
-                        "List the language codes accepted by the language argument (e.g. en-US, en-GB).")
-                .withCategories("text", "grammar", "languagetool");
+                        "List the language codes accepted by the language argument of the grammar "
+                                + "functions (e.g. en-US, en-GB), with human-readable names.")
+                .withCategories("text", "grammar", "languagetool")
+                .withTag("vgi.example_queries",
+                        "[{\"sql\": \"SELECT * FROM grammar.main.grammar_languages();\", "
+                                + "\"description\": \"List every supported language code with its "
+                                + "human-readable name.\"}, "
+                                + "{\"sql\": \"SELECT code FROM grammar.main.grammar_languages() "
+                                + "WHERE code LIKE 'en%';\", "
+                                + "\"description\": \"Filter to the English variants accepted by the "
+                                + "language argument.\"}]")
+                .withTag("vgi.columns_md",
+                        "| column | type | description |\n"
+                                + "|---|---|---|\n"
+                                + "| `code` | VARCHAR | Language code accepted by the language argument (e.g. en-US). |\n"
+                                + "| `name` | VARCHAR | Human-readable language name. |");
     }
 
     @Override public List<ArgSpec> argumentSpecs() {

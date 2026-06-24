@@ -2,12 +2,15 @@ package farm.query.vgi.grammar;
 
 import farm.query.vgi.function.Arguments;
 import farm.query.vgi.function.FunctionMetadata;
+import farm.query.vgi.protocol.FunctionExample;
 import farm.query.vgi.scalar.ScalarFn;
 import farm.query.vgi.types.Schemas;
 import org.apache.arrow.vector.BitVector;
 import org.apache.arrow.vector.VarCharVector;
 import org.apache.arrow.vector.types.pojo.ArrowType;
 import org.apache.arrow.vector.types.pojo.Schema;
+
+import java.util.List;
 
 /**
  * {@code grammar.is_grammatical(text [, language]) -> BOOLEAN} — true when the
@@ -20,14 +23,6 @@ abstract class IsGrammatical extends ScalarFn {
     IsGrammatical(GrammarEngine engine) { this.engine = engine; }
 
     @Override public final String name() { return "is_grammatical"; }
-
-    @Override public final String description() {
-        return "True when a piece of text has zero grammar/style/spelling issues (LanguageTool).";
-    }
-
-    @Override public final FunctionMetadata metadata() {
-        return FunctionMetadata.describe(description()).withCategories("text", "grammar", "languagetool");
-    }
 
     @Override protected final ArrowType outputType(Schema inputSchema, Arguments args) {
         return Schemas.BOOL;
@@ -55,6 +50,26 @@ abstract class IsGrammatical extends ScalarFn {
         public OneArg() { super(GrammarEngine.shared()); }
         public OneArg(GrammarEngine engine) { super(engine); }
 
+        @Override public String description() {
+            return "True when a piece of text has zero grammar/style/spelling issues, "
+                    + "checked in the default language (en-US) with LanguageTool.";
+        }
+
+        @Override public FunctionMetadata metadata() {
+            return FunctionMetadata.describe(description())
+                    .withCategories("text", "grammar", "languagetool")
+                    .withTag("vgi.example_queries",
+                            "[{\"sql\": \"SELECT grammar.main.is_grammatical("
+                                    + "'The quick brown fox jumps.');\", "
+                                    + "\"description\": \"Test whether a sentence is free of issues "
+                                    + "in the default language (returns true).\"}]")
+                    .withExamples(List.of(new FunctionExample(
+                            "SELECT grammar.main.is_grammatical('The quick brown fox jumps.');",
+                            "Test whether a sentence is free of issues in the default language "
+                                    + "(returns true).",
+                            "")));
+        }
+
         public void compute(@farm.query.vgi.scalar.Vector("text") VarCharVector in, BitVector out) {
             run(in, GrammarEngine.DEFAULT_LANGUAGE, out);
         }
@@ -64,6 +79,26 @@ abstract class IsGrammatical extends ScalarFn {
     public static final class TwoArg extends IsGrammatical {
         public TwoArg() { super(GrammarEngine.shared()); }
         public TwoArg(GrammarEngine engine) { super(engine); }
+
+        @Override public String description() {
+            return "True when a piece of text has zero grammar/style/spelling issues, "
+                    + "checked in an explicit language (e.g. en-GB) with LanguageTool.";
+        }
+
+        @Override public FunctionMetadata metadata() {
+            return FunctionMetadata.describe(description())
+                    .withCategories("text", "grammar", "languagetool")
+                    .withTag("vgi.example_queries",
+                            "[{\"sql\": \"SELECT grammar.main.is_grammatical("
+                                    + "'She don''t like it.', 'en-US');\", "
+                                    + "\"description\": \"Test grammaticality in a specific language "
+                                    + "(returns false - subject-verb agreement).\"}]")
+                    .withExamples(List.of(new FunctionExample(
+                            "SELECT grammar.main.is_grammatical('She don''t like it.', 'en-US');",
+                            "Test grammaticality in a specific language (returns false — "
+                                    + "subject-verb agreement).",
+                            "")));
+        }
 
         public void compute(@farm.query.vgi.scalar.Vector("text") VarCharVector in,
                             @farm.query.vgi.scalar.Const("language") String language,

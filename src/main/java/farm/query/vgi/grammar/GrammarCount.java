@@ -2,12 +2,15 @@ package farm.query.vgi.grammar;
 
 import farm.query.vgi.function.Arguments;
 import farm.query.vgi.function.FunctionMetadata;
+import farm.query.vgi.protocol.FunctionExample;
 import farm.query.vgi.scalar.ScalarFn;
 import farm.query.vgi.types.Schemas;
 import org.apache.arrow.vector.IntVector;
 import org.apache.arrow.vector.VarCharVector;
 import org.apache.arrow.vector.types.pojo.ArrowType;
 import org.apache.arrow.vector.types.pojo.Schema;
+
+import java.util.List;
 
 /**
  * Base for {@code grammar_count} scalars. Each concrete subclass declares its own
@@ -23,14 +26,6 @@ abstract class GrammarCount extends ScalarFn {
     GrammarCount(GrammarEngine engine) { this.engine = engine; }
 
     @Override public final String name() { return "grammar_count"; }
-
-    @Override public final String description() {
-        return "Count grammar, style, and spelling issues in a piece of text (LanguageTool).";
-    }
-
-    @Override public final FunctionMetadata metadata() {
-        return FunctionMetadata.describe(description()).withCategories("text", "grammar", "languagetool");
-    }
 
     @Override protected final ArrowType outputType(Schema inputSchema, Arguments args) {
         return Schemas.INT32;
@@ -58,6 +53,25 @@ abstract class GrammarCount extends ScalarFn {
         public OneArg() { super(GrammarEngine.shared()); }
         public OneArg(GrammarEngine engine) { super(engine); }
 
+        @Override public String description() {
+            return "Count grammar, style, and spelling issues in a piece of text, "
+                    + "checked in the default language (en-US) with LanguageTool.";
+        }
+
+        @Override public FunctionMetadata metadata() {
+            return FunctionMetadata.describe(description())
+                    .withCategories("text", "grammar", "languagetool")
+                    .withTag("vgi.example_queries",
+                            "[{\"sql\": \"SELECT grammar.main.grammar_count("
+                                    + "'She go to the store yesterday.');\", "
+                                    + "\"description\": \"Count the grammar/spelling issues in a "
+                                    + "sentence (default en-US).\"}]")
+                    .withExamples(List.of(new FunctionExample(
+                            "SELECT grammar.main.grammar_count('She go to the store yesterday.');",
+                            "Count the grammar/spelling issues in a sentence (default en-US).",
+                            "")));
+        }
+
         public void compute(@farm.query.vgi.scalar.Vector("text") VarCharVector in, IntVector out) {
             run(in, GrammarEngine.DEFAULT_LANGUAGE, out);
         }
@@ -67,6 +81,26 @@ abstract class GrammarCount extends ScalarFn {
     public static final class TwoArg extends GrammarCount {
         public TwoArg() { super(GrammarEngine.shared()); }
         public TwoArg(GrammarEngine engine) { super(engine); }
+
+        @Override public String description() {
+            return "Count grammar, style, and spelling issues in a piece of text, "
+                    + "checked in an explicit language (e.g. en-GB) with LanguageTool.";
+        }
+
+        @Override public FunctionMetadata metadata() {
+            return FunctionMetadata.describe(description())
+                    .withCategories("text", "grammar", "languagetool")
+                    .withTag("vgi.example_queries",
+                            "[{\"sql\": \"SELECT grammar.main.grammar_count("
+                                    + "'I love this colour.', 'en-US');\", "
+                                    + "\"description\": \"Count issues using a specific language; "
+                                    + "'colour' flags as a spelling issue in en-US.\"}]")
+                    .withExamples(List.of(new FunctionExample(
+                            "SELECT grammar.main.grammar_count('I love this colour.', 'en-US');",
+                            "Count issues using a specific language; 'colour' flags as a spelling "
+                                    + "issue in en-US.",
+                            "")));
+        }
 
         public void compute(@farm.query.vgi.scalar.Vector("text") VarCharVector in,
                             @farm.query.vgi.scalar.Const("language") String language,
