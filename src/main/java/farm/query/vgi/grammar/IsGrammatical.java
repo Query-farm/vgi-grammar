@@ -78,8 +78,7 @@ abstract class IsGrammatical extends ScalarFn {
                                     + "jumps.');\n"
                                     + "```",
                             "is grammatical, valid, clean text, no errors, predicate, filter, "
-                                    + "boolean, grammar check, validate writing",
-                            "IsGrammatical.java"))
+                                    + "boolean, grammar check, validate writing"))
                     .withTag("vgi.example_queries",
                             "[{\"sql\": \"SELECT grammar.main.is_grammatical("
                                     + "'The quick brown fox jumps.');\", "
@@ -97,7 +96,13 @@ abstract class IsGrammatical extends ScalarFn {
                             "")));
         }
 
-        public void compute(@farm.query.vgi.scalar.Vector("text") VarCharVector in, BitVector out) {
+        public void compute(
+                @farm.query.vgi.scalar.Vector(value = "text",
+                        doc = "The text to test; returns true when it has zero grammar, "
+                                + "style, and spelling issues in the default language (en-US), "
+                                + "else false. NULL yields NULL.")
+                VarCharVector in,
+                BitVector out) {
             run(in, GrammarEngine.DEFAULT_LANGUAGE, out);
         }
     }
@@ -134,8 +139,7 @@ abstract class IsGrammatical extends ScalarFn {
                                     + "'en-US');\n"
                                     + "```",
                             "is grammatical, valid, clean text, language, locale, dialect, "
-                                    + "en-GB, predicate, filter, boolean, validate writing",
-                            "IsGrammatical.java"))
+                                    + "en-GB, predicate, filter, boolean, validate writing"))
                     .withTag("vgi.example_queries",
                             "[{\"sql\": \"SELECT grammar.main.is_grammatical("
                                     + "'She don''t like it.', 'en-US');\", "
@@ -148,9 +152,17 @@ abstract class IsGrammatical extends ScalarFn {
                             "")));
         }
 
-        public void compute(@farm.query.vgi.scalar.Vector("text") VarCharVector in,
-                            @farm.query.vgi.scalar.Const("language") String language,
-                            BitVector out) {
+        public void compute(
+                @farm.query.vgi.scalar.Vector(value = "text",
+                        doc = "The text to test; returns true when it has zero grammar, "
+                                + "style, and spelling issues, else false. NULL yields NULL.")
+                VarCharVector in,
+                @farm.query.vgi.scalar.Const(value = "language",
+                        doc = "Language/locale code to check against (e.g. en-US, en-GB, "
+                                + "en-CA); a per-call constant. Controls which spellings and "
+                                + "rules apply. An unknown code fails the query.")
+                String language,
+                BitVector out) {
             run(in, language, out);
         }
     }

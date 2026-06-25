@@ -85,8 +85,7 @@ abstract class Correct extends ScalarFn {
                                     + "SELECT grammar.main.correct('She go to school evry day.');\n"
                                     + "```",
                             "correct, autocorrect, auto-correct, fix, rewrite, clean up, "
-                                    + "proofread, apply suggestions, spelling fix, grammar fix",
-                            "Correct.java"))
+                                    + "proofread, apply suggestions, spelling fix, grammar fix"))
                     .withTag("vgi.example_queries",
                             "[{\"sql\": \"SELECT grammar.main.correct("
                                     + "'She go to school evry day.');\", "
@@ -103,7 +102,14 @@ abstract class Correct extends ScalarFn {
                             "")));
         }
 
-        public void compute(@farm.query.vgi.scalar.Vector("text") VarCharVector in, VarCharVector out) {
+        public void compute(
+                @farm.query.vgi.scalar.Vector(value = "text",
+                        doc = "The text to auto-correct; the first suggested fix for each "
+                                + "issue is applied (right-to-left, non-overlapping) using the "
+                                + "default language (en-US). NULL yields NULL; text with no "
+                                + "fixable issues is returned unchanged.")
+                VarCharVector in,
+                VarCharVector out) {
             run(in, GrammarEngine.DEFAULT_LANGUAGE, out);
         }
     }
@@ -142,8 +148,7 @@ abstract class Correct extends ScalarFn {
                                     + "SELECT grammar.main.correct('I has two dog.', 'en-US');\n"
                                     + "```",
                             "correct, autocorrect, auto-correct, fix, rewrite, language, locale, "
-                                    + "dialect, en-GB, apply suggestions, proofread, clean up",
-                            "Correct.java"))
+                                    + "dialect, en-GB, apply suggestions, proofread, clean up"))
                     .withTag("vgi.example_queries",
                             "[{\"sql\": \"SELECT grammar.main.correct("
                                     + "'I has two dog.', 'en-US');\", "
@@ -156,9 +161,19 @@ abstract class Correct extends ScalarFn {
                             "")));
         }
 
-        public void compute(@farm.query.vgi.scalar.Vector("text") VarCharVector in,
-                            @farm.query.vgi.scalar.Const("language") String language,
-                            VarCharVector out) {
+        public void compute(
+                @farm.query.vgi.scalar.Vector(value = "text",
+                        doc = "The text to auto-correct; the first suggested fix for each "
+                                + "issue is applied (right-to-left, non-overlapping). NULL "
+                                + "yields NULL; text with no fixable issues is returned "
+                                + "unchanged.")
+                VarCharVector in,
+                @farm.query.vgi.scalar.Const(value = "language",
+                        doc = "Language/locale code to check against (e.g. en-US, en-GB, "
+                                + "en-CA); a per-call constant. Controls which spellings and "
+                                + "rules apply. An unknown code fails the query.")
+                String language,
+                VarCharVector out) {
             run(in, language, out);
         }
     }

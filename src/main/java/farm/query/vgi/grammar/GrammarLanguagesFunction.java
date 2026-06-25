@@ -51,8 +51,7 @@ public final class GrammarLanguagesFunction implements TableFunction {
                                 + "SELECT code, name FROM grammar.main.grammar_languages();\n"
                                 + "```",
                         "languages, language codes, locales, supported, en-US, en-GB, "
-                                + "list languages, discovery, dialects",
-                        "GrammarLanguagesFunction.java"))
+                                + "list languages, discovery, dialects"))
                 .withTag("vgi.example_queries",
                         "[{\"sql\": \"SELECT * FROM grammar.main.grammar_languages();\", "
                                 + "\"description\": \"List every supported language code with its "

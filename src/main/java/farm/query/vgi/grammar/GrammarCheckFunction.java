@@ -64,8 +64,7 @@ public final class GrammarCheckFunction implements TableFunction {
                                 + "FROM grammar.main.grammar_check('She go to school every day.');\n"
                                 + "```",
                         "grammar check, issues, errors, suggestions, rule, category, message, "
-                                + "offset, spelling, style, proofread, one row per issue",
-                        "GrammarCheckFunction.java"))
+                                + "offset, spelling, style, proofread, one row per issue"))
                 .withTag("vgi.example_queries",
                         "[{\"sql\": \"SELECT * FROM grammar.main.grammar_check("
                                 + "'She go to school every day.');\", "
@@ -92,9 +91,20 @@ public final class GrammarCheckFunction implements TableFunction {
     }
 
     @Override public List<ArgSpec> argumentSpecs() {
+        // Use the canonical ArgSpec constructor so each argument carries a doc
+        // string (VGI312). Order: name, position, arrowType, doc, isConst,
+        // hasDefault, defaultValue, typeBound, varargs, anyType, tableInput.
         return List.of(
-                ArgSpec.positional("text", 0, Schemas.UTF8),
-                ArgSpec.named("language", Schemas.UTF8, GrammarEngine.DEFAULT_LANGUAGE));
+                new ArgSpec("text", 0, Schemas.UTF8,
+                        "The text to check; LanguageTool returns one output row per grammar, "
+                                + "style, or spelling issue it finds in this text. NULL or empty "
+                                + "text yields no rows.",
+                        true, false, "", List.of(), false, false, false),
+                new ArgSpec("language", -1, Schemas.UTF8,
+                        "Optional language/locale code to check against (e.g. en-US, en-GB, "
+                                + "en-CA); defaults to en-US. Controls which spellings and rules "
+                                + "apply. An unknown code fails the query.",
+                        true, true, GrammarEngine.DEFAULT_LANGUAGE, List.of(), false, false, false));
     }
 
     @Override public BindResponse onBind(TableBindParams p) {

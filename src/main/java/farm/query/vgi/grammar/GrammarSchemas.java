@@ -33,13 +33,22 @@ public final class GrammarSchemas {
             commented("bad_text", Schemas.UTF8, "The flagged substring of the input text."),
             listOfUtf8("suggestions", "Suggested replacements, best first (may be empty).")));
 
-    /** {@code grammar_languages} output: (code, name). */
+    /**
+     * {@code grammar_languages} output: (code, name). Both columns are always
+     * populated (never NULL), so they are declared non-nullable — this also backs
+     * the {@code grammar_languages} catalog table's NOT NULL constraints (VGI804).
+     */
     public static final Schema LANGUAGES_SCHEMA = new Schema(List.of(
-            commented("code", Schemas.UTF8, "Language code accepted by the language argument (e.g. en-US)."),
-            commented("name", Schemas.UTF8, "Human-readable language name.")));
+            requiredCommented("code", Schemas.UTF8, "Language code accepted by the language argument (e.g. en-US)."),
+            requiredCommented("name", Schemas.UTF8, "Human-readable language name.")));
 
     static Field commented(String name, ArrowType type, String comment) {
         return new Field(name, new FieldType(true, type, null, Map.of("comment", comment)), null);
+    }
+
+    /** A NOT NULL field with a column comment. */
+    static Field requiredCommented(String name, ArrowType type, String comment) {
+        return new Field(name, new FieldType(false, type, null, Map.of("comment", comment)), null);
     }
 
     /** A nullable LIST(VARCHAR) field — DuckDB {@code VARCHAR[]}. */

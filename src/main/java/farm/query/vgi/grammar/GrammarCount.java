@@ -83,8 +83,7 @@ abstract class GrammarCount extends ScalarFn {
                                     + "yesterday.');\n"
                                     + "```",
                             "grammar count, count issues, number of errors, writing score, "
-                                    + "quality, spelling count, grammar, default language",
-                            "GrammarCount.java"))
+                                    + "quality, spelling count, grammar, default language"))
                     .withTag("vgi.example_queries",
                             "[{\"sql\": \"SELECT grammar.main.grammar_count("
                                     + "'She go to the store yesterday.');\", "
@@ -101,7 +100,13 @@ abstract class GrammarCount extends ScalarFn {
                             "")));
         }
 
-        public void compute(@farm.query.vgi.scalar.Vector("text") VarCharVector in, IntVector out) {
+        public void compute(
+                @farm.query.vgi.scalar.Vector(value = "text",
+                        doc = "The text to check; each row's grammar, style, and spelling "
+                                + "issues are counted using the default language (en-US). "
+                                + "NULL yields NULL.")
+                VarCharVector in,
+                IntVector out) {
             run(in, GrammarEngine.DEFAULT_LANGUAGE, out);
         }
     }
@@ -139,8 +144,7 @@ abstract class GrammarCount extends ScalarFn {
                                     + "'en-US');\n"
                                     + "```",
                             "grammar count, count issues, language, locale, dialect, en-GB, "
-                                    + "en-US, number of errors, spelling count, grammar",
-                            "GrammarCount.java"))
+                                    + "en-US, number of errors, spelling count, grammar"))
                     .withTag("vgi.example_queries",
                             "[{\"sql\": \"SELECT grammar.main.grammar_count("
                                     + "'I love this colour.', 'en-US');\", "
@@ -153,9 +157,17 @@ abstract class GrammarCount extends ScalarFn {
                             "")));
         }
 
-        public void compute(@farm.query.vgi.scalar.Vector("text") VarCharVector in,
-                            @farm.query.vgi.scalar.Const("language") String language,
-                            IntVector out) {
+        public void compute(
+                @farm.query.vgi.scalar.Vector(value = "text",
+                        doc = "The text to check; each row's grammar, style, and spelling "
+                                + "issues are counted. NULL yields NULL.")
+                VarCharVector in,
+                @farm.query.vgi.scalar.Const(value = "language",
+                        doc = "Language/locale code to check against (e.g. en-US, en-GB, "
+                                + "en-CA); a per-call constant. Controls which spellings and "
+                                + "rules apply. An unknown code fails the query.")
+                String language,
+                IntVector out) {
             run(in, language, out);
         }
     }
