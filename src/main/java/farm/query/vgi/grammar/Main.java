@@ -45,6 +45,8 @@ public final class Main {
                         + "English (en-US, en-GB, en-CA, ...) is shipped.");
         t.put("vgi.doc_md",
                 "# Grammar, Style & Spelling Checking in SQL\n\n"
+                        + "![LanguageTool logo](https://upload.wikimedia.org/wikipedia/commons/"
+                        + "thumb/4/45/LanguageTool_Logo.svg/250px-LanguageTool_Logo.svg.png)\n\n"
                         + "**Proofread, spell-check, and auto-correct natural-language text directly "
                         + "in DuckDB SQL** — grammar checking, style suggestions, typo detection, and "
                         + "one-call rewriting, powered by [LanguageTool](https://languagetool.org) and "
