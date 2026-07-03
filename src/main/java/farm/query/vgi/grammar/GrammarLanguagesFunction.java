@@ -33,6 +33,8 @@ public final class GrammarLanguagesFunction implements TableFunction {
                         "List the language codes accepted by the language argument of the grammar "
                                 + "functions (e.g. en-US, en-GB), with human-readable names.")
                 .withCategories("text", "grammar", "languagetool")
+                // VGI409/VGI411: primary category from the schema's vgi.categories registry.
+                .withTag("vgi.category", "Reference")
                 .withTags(Meta.objectTags(
                         "Supported Grammar Languages",
                         "List the language codes accepted by the `language` argument of the other "

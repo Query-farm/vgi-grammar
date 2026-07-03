@@ -63,6 +63,8 @@ abstract class Correct extends ScalarFn {
         @Override public FunctionMetadata metadata() {
             return FunctionMetadata.describe(description())
                     .withCategories("text", "grammar", "languagetool")
+                    // VGI409/VGI411: primary category from schema's vgi.categories registry.
+                    .withTag("vgi.category", "Correction")
                     .withTags(Meta.objectTags(
                             "Auto-Correct Text",
                             "Rewrite a piece of text by applying the first LanguageTool suggestion "
@@ -127,6 +129,8 @@ abstract class Correct extends ScalarFn {
         @Override public FunctionMetadata metadata() {
             return FunctionMetadata.describe(description())
                     .withCategories("text", "grammar", "languagetool")
+                    // VGI409/VGI411: primary category from schema's vgi.categories registry.
+                    .withTag("vgi.category", "Correction")
                     .withTags(Meta.objectTags(
                             "Auto-Correct Text (Language)",
                             "Rewrite a piece of text by applying the first LanguageTool suggestion "

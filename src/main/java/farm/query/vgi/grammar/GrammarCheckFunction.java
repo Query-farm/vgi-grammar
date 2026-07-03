@@ -41,6 +41,8 @@ public final class GrammarCheckFunction implements TableFunction {
                                 + "returns one row per issue with suggested replacements. Accepts an "
                                 + "optional language argument (default en-US).")
                 .withCategories("text", "grammar", "languagetool")
+                // VGI409/VGI411: primary category from the schema's vgi.categories registry.
+                .withTag("vgi.category", "Checking")
                 .withTags(Meta.objectTags(
                         "Grammar Check Issues",
                         "Run LanguageTool over a piece of text and return one row per grammar, "

@@ -71,13 +71,13 @@ Makefile                     build / test-unit / test-sql / test / clean
 
 ## SDK dependency & CI (self-contained via Maven Central)
 
-`farm.query:vgi:0.6.0` (pulls `farm.query:vgirpc:0.10.2` transitively; declared
-explicitly since the code imports `farm.query.vgirpc.*`) and
-`org.languagetool:language-en:6.6` are all on **Maven Central**, so the build is
+`farm.query:vgi:0.10.0` (pulls `farm.query:vgirpc` transitively; `vgirpc:0.12.0`
+is declared explicitly since the code imports `farm.query.vgirpc.*`) and
+`org.languagetool:language-en:6.8` are all on **Maven Central**, so the build is
 fully self-contained: no sibling checkout, no `mavenLocal`, no composite build.
 The in-process test driver (`TestSupport`) constructs `TableInitParams` directly
 with the vgi `TableInitParams` record arity (trailing `atUnit`, `atValue`,
-`storage` components as `null`); the arity is unchanged from 0.4.0 through 0.6.0.
+`storage` components as `null`); the arity is unchanged from 0.4.0 through 0.10.0.
 Get the exact constructor with
 `javap -cp <vgi jar> farm.query.vgi.table.TableInitParams` if you bump the SDK.
 
@@ -91,7 +91,7 @@ make test                     # both
 
 ## Packaging
 
-~91 MB shaded JAR (LanguageTool 6.6 + English rules). English only is shipped on
+~95 MB shaded JAR (LanguageTool 6.8 + English rules). English only is shipped on
 purpose (more `language-*` modules balloon the JAR). LanguageTool is **LGPL-2.1**,
 used as an unmodified, swappable Maven dependency — the worker's own code is MIT.
 See the README licensing table + LGPL note.

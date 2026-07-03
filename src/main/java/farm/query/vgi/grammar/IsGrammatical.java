@@ -58,6 +58,8 @@ abstract class IsGrammatical extends ScalarFn {
         @Override public FunctionMetadata metadata() {
             return FunctionMetadata.describe(description())
                     .withCategories("text", "grammar", "languagetool")
+                    // VGI409/VGI411: primary category from schema's vgi.categories registry.
+                    .withTag("vgi.category", "Checking")
                     .withTags(Meta.objectTags(
                             "Is Text Grammatical",
                             "Return `true` when a piece of text has zero grammar, style, and "
@@ -120,6 +122,8 @@ abstract class IsGrammatical extends ScalarFn {
         @Override public FunctionMetadata metadata() {
             return FunctionMetadata.describe(description())
                     .withCategories("text", "grammar", "languagetool")
+                    // VGI409/VGI411: primary category from schema's vgi.categories registry.
+                    .withTag("vgi.category", "Checking")
                     .withTags(Meta.objectTags(
                             "Is Text Grammatical (Language)",
                             "Return `true` when a piece of text has zero grammar, style, and "

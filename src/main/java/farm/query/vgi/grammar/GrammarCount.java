@@ -61,6 +61,8 @@ abstract class GrammarCount extends ScalarFn {
         @Override public FunctionMetadata metadata() {
             return FunctionMetadata.describe(description())
                     .withCategories("text", "grammar", "languagetool")
+                    // VGI409/VGI411: primary category from schema's vgi.categories registry.
+                    .withTag("vgi.category", "Checking")
                     .withTags(Meta.objectTags(
                             "Count Grammar Issues",
                             "Return the number of grammar, style, and spelling issues LanguageTool "
@@ -124,6 +126,8 @@ abstract class GrammarCount extends ScalarFn {
         @Override public FunctionMetadata metadata() {
             return FunctionMetadata.describe(description())
                     .withCategories("text", "grammar", "languagetool")
+                    // VGI409/VGI411: primary category from schema's vgi.categories registry.
+                    .withTag("vgi.category", "Checking")
                     .withTags(Meta.objectTags(
                             "Count Grammar Issues (Language)",
                             "Return the number of grammar, style, and spelling issues LanguageTool "

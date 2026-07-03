@@ -35,14 +35,14 @@ tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
 }
 
-val languageToolVersion = "6.6"
+val languageToolVersion = "6.8"
 
 dependencies {
     // VGI Java SDK from Maven Central. `vgi` is the worker/catalog API and pulls
     // in farm.query:vgirpc transitively; vgirpc is declared explicitly because
     // the code imports farm.query.vgirpc.* directly.
-    implementation("farm.query:vgi:0.9.0")
-    implementation("farm.query:vgirpc:0.11.0")
+    implementation("farm.query:vgi:0.10.0")
+    implementation("farm.query:vgirpc:0.12.0")
 
     // LanguageTool — LGPL-2.1. Used here as an UNMODIFIED, standard, swappable
     // Maven dependency (the LGPL relink/replace obligation is satisfied by it

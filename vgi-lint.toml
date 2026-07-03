@@ -1,0 +1,12 @@
+# vgi-lint-check configuration for vgi-grammar.
+#
+# LanguageTool builds a JLanguageTool engine per language on first use, which is
+# inherently slow (~15 s cold). The worker warms en-US on a startup thread, but
+# the linter's concurrent example probes can still race that cold build, so the
+# first example query for each function pays the model-load cost. That latency is
+# a property of the grammar engine, not a fixable example, so raise the
+# slow-example threshold and give execution rules a generous timeout instead of
+# emitting spurious VGI908 warnings on every lint.
+[execution]
+slow_seconds = 45
+timeout = 120
