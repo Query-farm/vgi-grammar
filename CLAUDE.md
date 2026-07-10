@@ -71,13 +71,13 @@ Makefile                     build / test-unit / test-sql / test / clean
 
 ## SDK dependency & CI (self-contained via Maven Central)
 
-`farm.query:vgi:0.10.0` (pulls `farm.query:vgirpc` transitively; `vgirpc:0.12.0`
+`farm.query:vgi:0.16.0` (pulls `farm.query:vgirpc` transitively; `vgirpc:0.15.0`
 is declared explicitly since the code imports `farm.query.vgirpc.*`) and
 `org.languagetool:language-en:6.8` are all on **Maven Central**, so the build is
 fully self-contained: no sibling checkout, no `mavenLocal`, no composite build.
 The in-process test driver (`TestSupport`) constructs `TableInitParams` directly
 with the vgi `TableInitParams` record arity (trailing `atUnit`, `atValue`,
-`storage` components as `null`); the arity is unchanged from 0.4.0 through 0.10.0.
+`storage`, `copyFrom` components as `null`); this arity holds through 0.16.0.
 Get the exact constructor with
 `javap -cp <vgi jar> farm.query.vgi.table.TableInitParams` if you bump the SDK.
 

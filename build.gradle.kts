@@ -41,8 +41,8 @@ dependencies {
     // VGI Java SDK from Maven Central. `vgi` is the worker/catalog API and pulls
     // in farm.query:vgirpc transitively; vgirpc is declared explicitly because
     // the code imports farm.query.vgirpc.* directly.
-    implementation("farm.query:vgi:0.10.0")
-    implementation("farm.query:vgirpc:0.12.0")
+    implementation("farm.query:vgi:0.16.0")
+    implementation("farm.query:vgirpc:0.15.0")
 
     // LanguageTool — LGPL-2.1. Used here as an UNMODIFIED, standard, swappable
     // Maven dependency (the LGPL relink/replace obligation is satisfied by it
@@ -55,15 +55,15 @@ dependencies {
     // resources), so this worker ships English only — see README "Languages".
     implementation("org.languagetool:language-en:$languageToolVersion")
 
-    implementation("org.slf4j:slf4j-simple:2.0.16")
+    implementation("org.slf4j:slf4j-simple:2.0.18")
     // LanguageTool and its deps use the Log4j 2 API and SLF4J. Without a Log4j
     // provider, Log4j's StatusLogger prints "could not find a logging provider"
     // to System.out — which corrupts the stdio Arrow-IPC transport and hangs the
     // worker. Bridge Log4j 2 -> SLF4J -> slf4j-simple (stderr) so NOTHING ever
     // writes to stdout. (slf4j-simple defaults all output to System.err.)
-    implementation("org.apache.logging.log4j:log4j-to-slf4j:2.24.3")
+    implementation("org.apache.logging.log4j:log4j-to-slf4j:2.26.1")
 
-    testImplementation("org.junit.jupiter:junit-jupiter:5.11.4")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.14.4")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 

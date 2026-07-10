@@ -47,30 +47,36 @@ public final class GrammarLanguagesFunction implements TableFunction {
                         "## grammar_languages()\n\n"
                                 + "Lists every language code accepted by the `language` argument of "
                                 + "the grammar functions, with its human-readable name. This "
-                                + "worker ships English only.\n\n"
-                                + "Takes no arguments.\n\n"
-                                + "```sql\n"
-                                + "SELECT code, name FROM grammar.main.grammar_languages();\n"
-                                + "```",
+                                + "worker ships English only, so the result enumerates the English "
+                                + "variants (`en-US`, `en-GB`, `en-CA`, ...).\n\n"
+                                + "Takes no arguments and always returns rows. See the worked "
+                                + "examples for typical projections.",
                         "languages, language codes, locales, supported, en-US, en-GB, "
                                 + "list languages, discovery, dialects"))
                 .withTag("vgi.example_queries",
-                        "[{\"sql\": \"SELECT * FROM grammar.main.grammar_languages();\", "
+                        "[{\"sql\": \"SELECT code, name FROM grammar.main.grammar_languages() "
+                                + "ORDER BY code\", "
                                 + "\"description\": \"List every supported language code with its "
-                                + "human-readable name.\"}, "
+                                + "human-readable name, alphabetically.\"}, "
                                 + "{\"sql\": \"SELECT code FROM grammar.main.grammar_languages() "
-                                + "WHERE code LIKE 'en%';\", "
+                                + "WHERE code LIKE 'en-%' ORDER BY code\", "
                                 + "\"description\": \"Filter to the English variants accepted by the "
-                                + "language argument.\"}]")
+                                + "language argument.\"}, "
+                                + "{\"sql\": \"SELECT count(*) AS supported_languages "
+                                + "FROM grammar.main.grammar_languages()\", "
+                                + "\"description\": \"Count how many language codes this worker "
+                                + "accepts.\"}]")
                 .withTag("vgi.executable_examples",
                         "[{\"description\": \"List every supported language code with its "
                                 + "human-readable name.\", \"sql\": \"SELECT code, name FROM "
                                 + "grammar.main.grammar_languages() ORDER BY code\"}]")
-                .withTag("vgi.result_columns_md",
-                        "| column | type | description |\n"
-                                + "|---|---|---|\n"
-                                + "| `code` | VARCHAR | Language code accepted by the language argument (e.g. en-US). |\n"
-                                + "| `name` | VARCHAR | Human-readable language name. |");
+                .withTag("vgi.result_columns_schema",
+                        "["
+                                + "{\"name\": \"code\", \"type\": \"VARCHAR\", "
+                                + "\"description\": \"Language code accepted by the language argument (e.g. en-US).\"},"
+                                + "{\"name\": \"name\", \"type\": \"VARCHAR\", "
+                                + "\"description\": \"Human-readable language name.\"}"
+                                + "]");
     }
 
     @Override public List<ArgSpec> argumentSpecs() {

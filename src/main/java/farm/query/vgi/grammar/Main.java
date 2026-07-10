@@ -225,20 +225,23 @@ public final class Main {
                 "## grammar.main.grammar_languages\n\n"
                         + "A table of every language code accepted by the `language` argument "
                         + "of the grammar functions, with its human-readable name. This worker "
-                        + "ships English only.\n\n"
-                        + "```sql\n"
-                        + "SELECT code, name FROM grammar.main.grammar_languages;\n"
-                        + "```",
+                        + "ships English only (`en-US`, `en-GB`, `en-CA`, ...). See the worked "
+                        + "examples for typical projections.",
                 "languages, language codes, locales, supported, en-US, en-GB, "
                         + "list languages, discovery, dialects");
         tags.put("vgi.example_queries",
-                "[{\"sql\": \"SELECT * FROM grammar.main.grammar_languages;\", "
+                "[{\"sql\": \"SELECT code, name FROM grammar.main.grammar_languages "
+                        + "ORDER BY code\", "
                         + "\"description\": \"List every supported language code with its "
-                        + "human-readable name.\"}, "
+                        + "human-readable name, alphabetically.\"}, "
                         + "{\"sql\": \"SELECT code FROM grammar.main.grammar_languages "
-                        + "WHERE code LIKE 'en%';\", "
+                        + "WHERE code LIKE 'en-%' ORDER BY code\", "
                         + "\"description\": \"Filter to the English variants accepted by the "
-                        + "language argument.\"}]");
+                        + "language argument.\"}, "
+                        + "{\"sql\": \"SELECT count(*) AS supported_languages "
+                        + "FROM grammar.main.grammar_languages\", "
+                        + "\"description\": \"Count how many language codes this worker "
+                        + "accepts.\"}]");
         tags.put("vgi.executable_examples",
                 "[{\"description\": \"List every supported language code with its "
                         + "human-readable name.\", \"sql\": \"SELECT code, name FROM "
