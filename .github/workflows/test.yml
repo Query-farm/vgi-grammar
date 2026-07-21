@@ -5,6 +5,10 @@ on:
     branches: [main]
   pull_request:
   workflow_dispatch:
+  # Allow the docker-publish workflow to gate its image build on this suite
+  # (jobs.ci: uses: ./.github/workflows/test.yml). Without workflow_call the
+  # caller fails at 0s with "workflow does not have on.workflow_call".
+  workflow_call:
 
 # The VGI Java SDK (farm.query:vgi, farm.query:vgirpc) is published to Maven
 # Central, so this build is fully self-contained — no sibling-repo checkout,
