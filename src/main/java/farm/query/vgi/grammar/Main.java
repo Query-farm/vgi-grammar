@@ -84,8 +84,7 @@ public final class Main {
                         + "typos in scraped data, or batch-cleaning free-text columns. The functions "
                         + "group into checking (surface or count issues, or test whether text is "
                         + "clean), correction (rewrite text by applying the top suggested fix), and "
-                        + "reference (discover the supported language codes); list the `grammar` "
-                        + "schema to see them.");
+                        + "reference (discover the supported language codes).");
         // VGI152/VGI920: fixed agent-suitability suite. Each task's reference_sql
         // calls the worker's own function on a fixed input, so grading is strict
         // yet version-independent — it measures whether an analyst discovers and
@@ -199,11 +198,26 @@ public final class Main {
                         + "{\"name\": \"Reference\", \"description\": \"Discover the language codes "
                         + "accepted by the grammar functions.\"}]");
         t.put("vgi.example_queries",
-                "SELECT * FROM grammar.main.grammar_check('She go to school every day.');\n"
-                        + "SELECT grammar.main.grammar_count('I has two dog.');\n"
-                        + "SELECT grammar.main.is_grammatical('The quick brown fox jumps.');\n"
-                        + "SELECT grammar.main.correct('She go to school evry day.');\n"
-                        + "SELECT * FROM grammar.main.grammar_languages();");
+                "[{\"sql\": \"SELECT rule_id, category, message, suggestions "
+                        + "FROM grammar.main.grammar_check('She go to school every day.') "
+                        + "ORDER BY \\\"offset\\\"\", "
+                        + "\"description\": \"Surface each grammar/spelling issue in a "
+                        + "sentence with its rule, category, and suggested fixes.\"}, "
+                        + "{\"sql\": \"SELECT grammar.main.grammar_count('I has two dog.') "
+                        + "AS issue_count\", "
+                        + "\"description\": \"Count the writing issues in a piece of text "
+                        + "(default en-US).\"}, "
+                        + "{\"sql\": \"SELECT grammar.main.is_grammatical("
+                        + "'The quick brown fox jumps.') AS clean\", "
+                        + "\"description\": \"Test whether text is free of writing issues.\"}, "
+                        + "{\"sql\": \"SELECT grammar.main.correct('She go to school evry day.') "
+                        + "AS corrected\", "
+                        + "\"description\": \"Auto-correct text by applying the top suggested "
+                        + "fix for each issue.\"}, "
+                        + "{\"sql\": \"SELECT code, name FROM grammar.main.grammar_languages "
+                        + "WHERE code LIKE 'en-%' ORDER BY code\", "
+                        + "\"description\": \"List the supported English language codes to pass "
+                        + "as the language argument.\"}]");
         return t;
     }
 
@@ -225,8 +239,9 @@ public final class Main {
                 "## grammar.main.grammar_languages\n\n"
                         + "A table of every language code accepted by the `language` argument "
                         + "of the grammar functions, with its human-readable name. This worker "
-                        + "ships English only (`en-US`, `en-GB`, `en-CA`, ...). See the worked "
-                        + "examples for typical projections.",
+                        + "ships English only (`en-US`, `en-GB`, `en-CA`, ...). Because it takes "
+                        + "no arguments it is also exposed as a plain table, so you can query it "
+                        + "with or without parentheses.",
                 "languages, language codes, locales, supported, en-US, en-GB, "
                         + "list languages, discovery, dialects");
         tags.put("vgi.example_queries",

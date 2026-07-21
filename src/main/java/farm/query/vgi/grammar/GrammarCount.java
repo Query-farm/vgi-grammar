@@ -70,7 +70,7 @@ abstract class GrammarCount extends ScalarFn {
                                     + "(`en-US`). Use it to score or rank free text by writing "
                                     + "quality, to gate content (e.g. `WHERE grammar_count(body) = "
                                     + "0`), or as a quick health check before running the fuller "
-                                    + "`grammar_check` table function. Returns an INTEGER; "
+                                    + "`grammar_check` table function. Returns an `INTEGER`; "
                                     + "`NULL` input yields `NULL`. A row that errors internally is "
                                     + "skipped (counted as `NULL`), but an unknown language is a "
                                     + "hard, query-failing error.",
@@ -136,7 +136,7 @@ abstract class GrammarCount extends ScalarFn {
                                     + "`grammar_count` but lets you pick the dialect/locale, which "
                                     + "changes which spellings and rules apply (e.g. `colour` is "
                                     + "fine in `en-GB` but flagged in `en-US`). Returns an "
-                                    + "INTEGER; `NULL` text yields `NULL`; an unknown language code "
+                                    + "`INTEGER`; `NULL` text yields `NULL`; an unknown language code "
                                     + "is a hard, query-failing error.",
                             "## grammar_count(text, language)\n\n"
                                     + "Counts grammar, style, and spelling issues in `text` using "

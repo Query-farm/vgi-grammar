@@ -49,8 +49,7 @@ public final class GrammarLanguagesFunction implements TableFunction {
                                 + "the grammar functions, with its human-readable name. This "
                                 + "worker ships English only, so the result enumerates the English "
                                 + "variants (`en-US`, `en-GB`, `en-CA`, ...).\n\n"
-                                + "Takes no arguments and always returns rows. See the worked "
-                                + "examples for typical projections.",
+                                + "Takes no arguments and always returns the same rows.",
                         "languages, language codes, locales, supported, en-US, en-GB, "
                                 + "list languages, discovery, dialects"))
                 .withTag("vgi.example_queries",

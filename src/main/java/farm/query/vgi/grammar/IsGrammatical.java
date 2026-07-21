@@ -68,7 +68,7 @@ abstract class IsGrammatical extends ScalarFn {
                                     + "a boolean predicate to filter or validate text (e.g. "
                                     + "`WHERE is_grammatical(comment)`), or as a cheap clean/dirty "
                                     + "gate before invoking the fuller `grammar_check`. Returns a "
-                                    + "BOOLEAN; `NULL` input yields `NULL`. An unknown language is a "
+                                    + "`BOOLEAN`; `NULL` input yields `NULL`. An unknown language is a "
                                     + "hard, query-failing error.",
                             "## is_grammatical(text)\n\n"
                                     + "Returns `true` when `text` has no grammar/style/spelling "
@@ -131,7 +131,7 @@ abstract class IsGrammatical extends ScalarFn {
                                     + "explicit language code (e.g. `en-GB`). Behaves like the "
                                     + "single-argument `is_grammatical` but lets you pick the "
                                     + "dialect/locale, which changes which spellings and rules "
-                                    + "apply. Returns a BOOLEAN; `NULL` text yields `NULL`; an "
+                                    + "apply. Returns a `BOOLEAN`; `NULL` text yields `NULL`; an "
                                     + "unknown language code is a hard, query-failing error.",
                             "## is_grammatical(text, language)\n\n"
                                     + "Returns `true` when `text` has no grammar/style/spelling "

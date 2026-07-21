@@ -72,7 +72,7 @@ abstract class Correct extends ScalarFn {
                                     + "the default language (`en-US`). Suggestions are applied "
                                     + "right-to-left and non-overlapping so earlier offsets stay "
                                     + "valid. Use it to clean up free text inline in SQL. Returns a "
-                                    + "VARCHAR; `NULL` input yields `NULL`; text with no fixable "
+                                    + "`VARCHAR`; `NULL` input yields `NULL`; text with no fixable "
                                     + "issues is returned unchanged. Only the top suggestion per "
                                     + "issue is applied, so the result is a best-effort fix, not a "
                                     + "guaranteed perfect rewrite.",
@@ -138,7 +138,7 @@ abstract class Correct extends ScalarFn {
                                     + "an explicit language code (e.g. `en-GB`). Behaves like the "
                                     + "single-argument `correct` but lets you pick the "
                                     + "dialect/locale, which changes which spellings and rules "
-                                    + "apply. Returns a VARCHAR; `NULL` text yields `NULL`; text "
+                                    + "apply. Returns a `VARCHAR`; `NULL` text yields `NULL`; text "
                                     + "with no fixable issues is returned unchanged; an unknown "
                                     + "language code is a hard, query-failing error.",
                             "## correct(text, language)\n\n"

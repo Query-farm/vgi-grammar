@@ -63,7 +63,7 @@ public final class GrammarCheckFunction implements TableFunction {
                                 + "an ordered `suggestions` array (best first). Accepts an optional "
                                 + "`language` (default `en-US`).\n\n"
                                 + "`NULL` or empty text returns no rows; an unknown language fails "
-                                + "the query. See the worked examples for typical projections.",
+                                + "the query.",
                         "grammar check, issues, errors, suggestions, rule, category, message, "
                                 + "offset, spelling, style, proofread, one row per issue"))
                 .withTag("vgi.example_queries",
