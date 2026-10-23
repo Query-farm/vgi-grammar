@@ -18,6 +18,20 @@ import java.util.List;
  */
 abstract class IsGrammatical extends ScalarFn {
 
+    /**
+     * {@code vgi.example_queries} shared by both overloads. The attached catalog
+     * shows one tag set per function name, so the tag lists every overload's
+     * example; each one matches a {@code withExamples} entry below (VGI515).
+     */
+    static final String EXAMPLE_QUERIES = "["
+            + "{\"sql\": \"SELECT grammar.main.is_grammatical('The quick brown fox "
+            + "jumps.');\", \"description\": \"Test whether a sentence is free of issues in"
+            + " the default language (returns true).\"},"
+            + "{\"sql\": \"SELECT grammar.main.is_grammatical('She don''t like it.', "
+            + "'en-US');\", \"description\": \"Test grammaticality in a specific language "
+            + "(returns false - subject-verb agreement).\"}"
+            + "]";
+
     final GrammarEngine engine;
 
     IsGrammatical(GrammarEngine engine) { this.engine = engine; }
@@ -81,11 +95,7 @@ abstract class IsGrammatical extends ScalarFn {
                                     + "```",
                             "is grammatical, valid, clean text, no errors, predicate, filter, "
                                     + "boolean, grammar check, validate writing"))
-                    .withTag("vgi.example_queries",
-                            "[{\"sql\": \"SELECT grammar.main.is_grammatical("
-                                    + "'The quick brown fox jumps.');\", "
-                                    + "\"description\": \"Test whether a sentence is free of issues "
-                                    + "in the default language (returns true).\"}]")
+                    .withTag("vgi.example_queries", EXAMPLE_QUERIES)
                     .withTag("vgi.executable_examples",
                             "[{\"description\": \"Test whether a clean sentence is grammatical "
                                     + "(default en-US).\", \"sql\": \"SELECT "
@@ -144,11 +154,7 @@ abstract class IsGrammatical extends ScalarFn {
                                     + "```",
                             "is grammatical, valid, clean text, language, locale, dialect, "
                                     + "en-GB, predicate, filter, boolean, validate writing"))
-                    .withTag("vgi.example_queries",
-                            "[{\"sql\": \"SELECT grammar.main.is_grammatical("
-                                    + "'She don''t like it.', 'en-US');\", "
-                                    + "\"description\": \"Test grammaticality in a specific language "
-                                    + "(returns false - subject-verb agreement).\"}]")
+                    .withTag("vgi.example_queries", EXAMPLE_QUERIES)
                     .withExamples(List.of(new FunctionExample(
                             "SELECT grammar.main.is_grammatical('She don''t like it.', 'en-US');",
                             "Test grammaticality in a specific language (returns false — "

@@ -85,12 +85,8 @@ public final class Main {
                         + "group into checking (surface or count issues, or test whether text is "
                         + "clean), correction (rewrite text by applying the top suggested fix), and "
                         + "reference (discover the supported language codes).");
-        // VGI152/VGI920: fixed agent-suitability suite. Each task's reference_sql
-        // calls the worker's own function on a fixed input, so grading is strict
-        // yet version-independent — it measures whether an analyst discovers and
-        // correctly invokes the right function, not a hard-coded LanguageTool
-        // output that could drift between rule-set versions. Column names vary by
-        // analyst phrasing, so every task sets ignore_column_names. The six tasks
+        // VGI152/VGI920: fixed agent-suitability suite (names + prompts only; the
+        // private graders live in vgi-agent-tests.yaml, VGI416). The six tasks
         // cover all five worker objects (is_grammatical, grammar_count,
         // grammar_check, correct, grammar_languages).
         t.put("vgi.agent_test_tasks", agentTestTasksJson());
@@ -107,52 +103,33 @@ public final class Main {
 
     /**
      * The {@code vgi.agent_test_tasks} suite (VGI152/VGI920). A JSON array of
-     * {@code {name, prompt, reference_sql, ignore_column_names}} analyst tasks.
-     * Each {@code reference_sql} invokes the worker's own function on a fixed
-     * input, so the expected result is whatever the current LanguageTool build
-     * returns — grading stays deterministic across rule-set versions and only
-     * checks that the analyst reached for the right function.
+     * public {@code {name, prompt}} analyst tasks (VGI416). The private graders
+     * ({@code reference_sql}, {@code ignore_column_names}) live in the
+     * {@code vgi-agent-tests.yaml} sidecar at the repo root, keyed by task name.
+     * Each reference invokes the worker's own function on a fixed input, so the
+     * expected result is whatever the current LanguageTool build returns — grading
+     * stays deterministic across rule-set versions.
      */
     private static String agentTestTasksJson() {
         return "["
-                + "{\"name\": \"clean-text-grammatical\", "
-                + "\"prompt\": \"Is the sentence 'The quick brown fox jumps over the lazy "
-                + "dog.' grammatically correct? Return a single boolean value.\", "
-                + "\"reference_sql\": \"SELECT grammar.main.is_grammatical('The quick brown "
-                + "fox jumps over the lazy dog.') AS ok\", "
-                + "\"ignore_column_names\": true}, "
-                + "{\"name\": \"flag-ungrammatical-text\", "
-                + "\"prompt\": \"Is the sentence 'She go to school every day.' grammatically "
-                + "correct? Return a single boolean value.\", "
-                + "\"reference_sql\": \"SELECT grammar.main.is_grammatical('She go to school "
-                + "every day.') AS ok\", "
-                + "\"ignore_column_names\": true}, "
-                + "{\"name\": \"count-issues-in-clean-text\", "
-                + "\"prompt\": \"How many grammar, style, or spelling issues does the sentence "
-                + "'The quick brown fox jumps over the lazy dog.' contain? Return the count as "
-                + "a single number.\", "
-                + "\"reference_sql\": \"SELECT grammar.main.grammar_count('The quick brown fox "
-                + "jumps over the lazy dog.') AS n\", "
-                + "\"ignore_column_names\": true}, "
-                + "{\"name\": \"detect-issue-in-text\", "
-                + "\"prompt\": \"When you check the sentence 'She go to school every day.' for "
-                + "writing problems, does it have at least one issue? Return a single boolean "
-                + "value.\", "
-                + "\"reference_sql\": \"SELECT count(*) > 0 AS has_issue FROM "
-                + "grammar.main.grammar_check('She go to school every day.')\", "
-                + "\"ignore_column_names\": true}, "
-                + "{\"name\": \"auto-correct-text\", "
-                + "\"prompt\": \"Return the sentence 'I have thre aples.' rewritten with its "
-                + "spelling and grammar automatically corrected.\", "
-                + "\"reference_sql\": \"SELECT grammar.main.correct('I have thre aples.') AS "
-                + "corrected\", "
-                + "\"ignore_column_names\": true}, "
-                + "{\"name\": \"is-language-supported\", "
-                + "\"prompt\": \"Is the language code 'en-GB' one of the languages this worker "
-                + "supports for grammar checking? Return a single boolean value.\", "
-                + "\"reference_sql\": \"SELECT count(*) > 0 AS supported FROM "
-                + "grammar.main.grammar_languages WHERE code = 'en-GB'\", "
-                + "\"ignore_column_names\": true}"
+                + "{\"name\": \"clean-text-grammatical\", \"prompt\": \"Is the sentence 'The quick"
+                + " brown fox jumps over the lazy dog.' grammatically correct? Return a "
+                + "single boolean value.\"}, "
+                + "{\"name\": \"flag-ungrammatical-text\", \"prompt\": \"Is the sentence 'She go "
+                + "to school every day.' grammatically correct? Return a single boolean "
+                + "value.\"}, "
+                + "{\"name\": \"count-issues-in-clean-text\", \"prompt\": \"How many grammar, "
+                + "style, or spelling issues does the sentence 'The quick brown fox jumps "
+                + "over the lazy dog.' contain? Return the count as a single number.\"}, "
+                + "{\"name\": \"detect-issue-in-text\", \"prompt\": \"When you check the sentence "
+                + "'She go to school every day.' for writing problems, does it have at "
+                + "least one issue? Return a single boolean value.\"}, "
+                + "{\"name\": \"auto-correct-text\", \"prompt\": \"Return the sentence 'I have "
+                + "thre aples.' rewritten with its spelling and grammar automatically "
+                + "corrected.\"}, "
+                + "{\"name\": \"is-language-supported\", \"prompt\": \"Is the language code "
+                + "'en-GB' one of the languages this worker supports for grammar checking? "
+                + "Return a single boolean value.\"}"
                 + "]";
     }
 

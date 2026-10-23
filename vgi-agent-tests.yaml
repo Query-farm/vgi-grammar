@@ -1,0 +1,34 @@
+# Private grader sidecar for `vgi-lint simulate` (and `lint`'s VGI520 coverage).
+# The worker publishes only task names + prompts in `vgi.agent_test_tasks`
+# (Main.agentTestTasksJson); these grader fields are keyed by that name and never
+# sent to the analyst agent (VGI416).
+tasks:
+  - name: clean-text-grammatical
+    reference_sql: |-
+      SELECT grammar.main.is_grammatical('The quick brown fox jumps over the lazy dog.') AS ok
+    ignore_column_names: true
+
+  - name: flag-ungrammatical-text
+    reference_sql: |-
+      SELECT grammar.main.is_grammatical('She go to school every day.') AS ok
+    ignore_column_names: true
+
+  - name: count-issues-in-clean-text
+    reference_sql: |-
+      SELECT grammar.main.grammar_count('The quick brown fox jumps over the lazy dog.') AS n
+    ignore_column_names: true
+
+  - name: detect-issue-in-text
+    reference_sql: |-
+      SELECT count(*) > 0 AS has_issue FROM grammar.main.grammar_check('She go to school every day.')
+    ignore_column_names: true
+
+  - name: auto-correct-text
+    reference_sql: |-
+      SELECT grammar.main.correct('I have thre aples.') AS corrected
+    ignore_column_names: true
+
+  - name: is-language-supported
+    reference_sql: |-
+      SELECT count(*) > 0 AS supported FROM grammar.main.grammar_languages WHERE code = 'en-GB'
+    ignore_column_names: true

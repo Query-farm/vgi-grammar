@@ -21,6 +21,20 @@ import java.util.List;
  */
 abstract class GrammarCount extends ScalarFn {
 
+    /**
+     * {@code vgi.example_queries} shared by both overloads. The attached catalog
+     * shows one tag set per function name, so the tag lists every overload's
+     * example; each one matches a {@code withExamples} entry below (VGI515).
+     */
+    static final String EXAMPLE_QUERIES = "["
+            + "{\"sql\": \"SELECT grammar.main.grammar_count('She go to the store "
+            + "yesterday.');\", \"description\": \"Count the grammar/spelling issues in a "
+            + "sentence (default en-US).\"},"
+            + "{\"sql\": \"SELECT grammar.main.grammar_count('I love this colour.', "
+            + "'en-US');\", \"description\": \"Count issues using a specific language; "
+            + "'colour' flags as a spelling issue in en-US.\"}"
+            + "]";
+
     final GrammarEngine engine;
 
     GrammarCount(GrammarEngine engine) { this.engine = engine; }
@@ -86,11 +100,7 @@ abstract class GrammarCount extends ScalarFn {
                                     + "```",
                             "grammar count, count issues, number of errors, writing score, "
                                     + "quality, spelling count, grammar, default language"))
-                    .withTag("vgi.example_queries",
-                            "[{\"sql\": \"SELECT grammar.main.grammar_count("
-                                    + "'She go to the store yesterday.');\", "
-                                    + "\"description\": \"Count the grammar/spelling issues in a "
-                                    + "sentence (default en-US).\"}]")
+                    .withTag("vgi.example_queries", EXAMPLE_QUERIES)
                     .withTag("vgi.executable_examples",
                             "[{\"description\": \"Count the grammar/spelling issues in a sentence "
                                     + "(default en-US).\", \"sql\": \"SELECT "
@@ -149,11 +159,7 @@ abstract class GrammarCount extends ScalarFn {
                                     + "```",
                             "grammar count, count issues, language, locale, dialect, en-GB, "
                                     + "en-US, number of errors, spelling count, grammar"))
-                    .withTag("vgi.example_queries",
-                            "[{\"sql\": \"SELECT grammar.main.grammar_count("
-                                    + "'I love this colour.', 'en-US');\", "
-                                    + "\"description\": \"Count issues using a specific language; "
-                                    + "'colour' flags as a spelling issue in en-US.\"}]")
+                    .withTag("vgi.example_queries", EXAMPLE_QUERIES)
                     .withExamples(List.of(new FunctionExample(
                             "SELECT grammar.main.grammar_count('I love this colour.', 'en-US');",
                             "Count issues using a specific language; 'colour' flags as a spelling "

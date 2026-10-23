@@ -20,6 +20,20 @@ import java.util.List;
  */
 abstract class Correct extends ScalarFn {
 
+    /**
+     * {@code vgi.example_queries} shared by both overloads. The attached catalog
+     * shows one tag set per function name, so the tag lists every overload's
+     * example; each one matches a {@code withExamples} entry below (VGI515).
+     */
+    static final String EXAMPLE_QUERIES = "["
+            + "{\"sql\": \"SELECT grammar.main.correct('She go to school evry day.');\", "
+            + "\"description\": \"Auto-correct a sentence in the default language (fixes "
+            + "agreement and the 'evry' typo).\"},"
+            + "{\"sql\": \"SELECT grammar.main.correct('I has two dog.', 'en-US');\", "
+            + "\"description\": \"Auto-correct text in a specific language (fixes verb and "
+            + "noun agreement).\"}"
+            + "]";
+
     final GrammarEngine engine;
 
     Correct(GrammarEngine engine) { this.engine = engine; }
@@ -88,11 +102,7 @@ abstract class Correct extends ScalarFn {
                                     + "```",
                             "correct, autocorrect, auto-correct, fix, rewrite, clean up, "
                                     + "proofread, apply suggestions, spelling fix, grammar fix"))
-                    .withTag("vgi.example_queries",
-                            "[{\"sql\": \"SELECT grammar.main.correct("
-                                    + "'She go to school evry day.');\", "
-                                    + "\"description\": \"Auto-correct a sentence in the default "
-                                    + "language (fixes agreement and the 'evry' typo).\"}]")
+                    .withTag("vgi.example_queries", EXAMPLE_QUERIES)
                     .withTag("vgi.executable_examples",
                             "[{\"description\": \"Auto-correct a sentence in the default language.\", "
                                     + "\"sql\": \"SELECT grammar.main.correct('She go to school evry "
@@ -153,11 +163,7 @@ abstract class Correct extends ScalarFn {
                                     + "```",
                             "correct, autocorrect, auto-correct, fix, rewrite, language, locale, "
                                     + "dialect, en-GB, apply suggestions, proofread, clean up"))
-                    .withTag("vgi.example_queries",
-                            "[{\"sql\": \"SELECT grammar.main.correct("
-                                    + "'I has two dog.', 'en-US');\", "
-                                    + "\"description\": \"Auto-correct text in a specific language "
-                                    + "(fixes verb and noun agreement).\"}]")
+                    .withTag("vgi.example_queries", EXAMPLE_QUERIES)
                     .withExamples(List.of(new FunctionExample(
                             "SELECT grammar.main.correct('I has two dog.', 'en-US');",
                             "Auto-correct text in a specific language "

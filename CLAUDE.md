@@ -14,7 +14,7 @@ shaded fat JAR. Catalog name `grammar` (single `main` schema). Package
 ## Layout
 
 ```
-build.gradle.kts / settings.gradle.kts / gradle.properties   Gradle, shadow plugin (com.gradleup.shadow 9.4.2)
+build.gradle.kts / settings.gradle.kts / gradle.properties   Gradle, shadow plugin (com.gradleup.shadow 9.6.1)
 src/main/java/farm/query/vgi/grammar/
   Main.java                  Worker.builder().catalogName("grammar")...registerTable/registerScalar; warms en-US at startup
   GrammarEngine.java         LanguageTool integration: per-language JLanguageTool cache, check/count/correct/languages
@@ -71,15 +71,16 @@ Makefile                     build / test-unit / test-sql / test / clean
 
 ## SDK dependency & CI (self-contained via Maven Central)
 
-`farm.query:vgi:0.19.0` (pulls `farm.query:vgirpc` transitively; `vgirpc:0.16.0`
+`farm.query:vgi:0.43.0` (pulls `farm.query:vgirpc` transitively; `vgirpc:0.33.1`
 is declared explicitly since the code imports `farm.query.vgirpc.*`) and
 `org.languagetool:language-en:6.8` are all on **Maven Central**, so the build is
 fully self-contained: no sibling checkout, no `mavenLocal`, no composite build.
 The in-process test driver (`TestSupport`) constructs `TableInitParams` directly
-with the vgi `TableInitParams` record arity (trailing `atUnit`, `atValue`,
-`storage`, `copyFrom` components as `null`); this arity holds through 0.19.0. vgi 0.19.0 adds the
-`input_from_args` FunctionInfo field the current community extension expects
-(0.18.0 emitted a 31-field schema and ATTACH failed with a FunctionInfo mismatch).
+with the vgi `TableInitParams` record arity (25 components as of 0.43.0: a
+`bindOutputSchema` after `outputSchema`, and trailing `atUnit`, `atValue`,
+`storage`, `copyFrom`, `splitPayloads`). The 0.19.0 worker no longer attaches
+to the current community extension ("out-of-date Apache Arrow schema" on
+`catalog_attach`), so keep the SDK current.
 Get the exact constructor with
 `javap -cp <vgi jar> farm.query.vgi.table.TableInitParams` if you bump the SDK.
 
