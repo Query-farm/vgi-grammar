@@ -2,10 +2,15 @@ package farm.query.vgi.grammar;
 
 import farm.query.vgi.Worker;
 import farm.query.vgi.catalog.CatalogTable;
+import farm.query.vgi.catalog.ConstraintRecord;
 import farm.query.vgi.internal.SchemaUtil;
 
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import org.apache.arrow.vector.types.pojo.Field;
 
 /**
  * VGI worker entry point for LanguageTool grammar / style / spelling checking.
@@ -253,8 +258,32 @@ public final class Main {
                 .scanFunction("grammar_languages")
                 .cardinality(40L, 40L)
                 // VGI807/VGI806: `code` uniquely identifies each language row.
-                .primaryKey(java.util.List.of(java.util.List.of(0)))
+                .constraints(grammarLanguagesConstraints(), "grammar_languages.v1".getBytes(StandardCharsets.UTF_8))
                 .build();
+    }
+
+    /**
+     * Under vgi.v3 constraints are canonical records: NOT_NULL for every
+     * non-nullable column (the SDK serves a column non-nullable only when a NOT_NULL
+     * or PRIMARY KEY record names it) plus the PRIMARY KEY (code).
+     */
+    static List<ConstraintRecord> grammarLanguagesConstraints() {
+        List<ConstraintRecord> out = new ArrayList<>();
+        for (Field f : GrammarSchemas.LANGUAGES_SCHEMA.getFields()) {
+            if (!f.isNullable()) {
+                out.add(ConstraintRecord.builder(SCHEMA, "grammar_languages", f.getName() + "_not_null")
+                        .notNull(f.getName())
+                        .enforcement(ConstraintRecord.Enforcement.ENFORCED)
+                        .validation(ConstraintRecord.Validation.ALL_ROWS)
+                        .build());
+            }
+        }
+        out.add(ConstraintRecord.builder(SCHEMA, "grammar_languages", "grammar_languages_pk")
+                .primaryKey("code")
+                .enforcement(ConstraintRecord.Enforcement.ENFORCED)
+                .validation(ConstraintRecord.Validation.ALL_ROWS)
+                .build());
+        return out;
     }
 
     public static Worker buildWorker() {

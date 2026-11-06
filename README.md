@@ -131,7 +131,7 @@ make test             # both
 worker attached as a VGI `LOCATION`. Install the runner once:
 
 ```sh
-uv tool install haybarn-unittest
+uv tool install --prerelease allow 'haybarn-unittest>=2.0.0rc11,<2.1'
 export PATH="$HOME/.local/bin:$PATH"
 ```
 
