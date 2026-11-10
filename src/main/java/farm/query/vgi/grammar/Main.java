@@ -36,7 +36,10 @@ public final class Main {
     /** Catalog-level metadata tags surfaced to DuckDB and the vgi-lint linter. */
     private static Map<String, String> catalogTags() {
         Map<String, String> t = new LinkedHashMap<>();
-        t.put("vgi.title", "Grammar, Style & Spelling Checker");
+        t.put("vgi.title", "Grammar Checker");
+        t.put("vgi.subtitle",
+                "Find, count, and auto-correct grammar, style, and spelling issues in free "
+                        + "text using the open-source LanguageTool engine.");
         t.put("vgi.keywords", Meta.keywordsJson(
                 "grammar, spelling, spell check, style, proofread, proofreading, "
                         + "correct, autocorrect, languagetool, text quality, writing, linter, "
@@ -141,7 +144,7 @@ public final class Main {
     /** Schema-level metadata tags for the single {@code main} schema. */
     private static Map<String, String> schemaTags() {
         Map<String, String> t = new LinkedHashMap<>();
-        t.put("vgi.title", "Grammar — main");
+        t.put("vgi.title", "Proofreading Functions");
         t.put("vgi.keywords", Meta.keywordsJson(
                 "grammar, spelling, style, proofreading, languagetool, "
                         + "grammar_check, grammar_count, is_grammatical, correct, "
