@@ -14,7 +14,7 @@ spelling** and **auto-corrects** text as DuckDB SQL functions, powered by
 
 ```sql
 INSTALL vgi FROM community; LOAD vgi;
-ATTACH 'grammar' (TYPE vgi, LOCATION 'java -jar vgi-grammar-v0.2.0.jar');
+ATTACH 'grammar' (TYPE vgi, LOCATION 'java -jar vgi-grammar-v0.3.0.jar');
 
 -- One row per issue, with suggested replacements (suggestions is VARCHAR[]):
 SELECT rule_id, message, bad_text, suggestions
@@ -32,7 +32,7 @@ SELECT * FROM grammar.grammar_languages();
 ```
 
 The worker is a self-contained, shaded fat JAR. Its manifest sets
-`Add-Opens: java.base/java.nio`, so a bare `java -jar vgi-grammar-v0.2.0.jar` works
+`Add-Opens: java.base/java.nio`, so a bare `java -jar vgi-grammar-v0.3.0.jar` works
 directly as a VGI `LOCATION` with no extra JVM flags.
 
 ## Quick start
@@ -40,7 +40,7 @@ directly as a VGI `LOCATION` with no extra JVM flags.
 Every [GitHub release](https://github.com/Query-farm/vgi-grammar/releases) ships a self-contained worker jar. It needs Java 21 or newer. Download it:
 
 ```sh
-curl -LO https://github.com/Query-farm/vgi-grammar/releases/download/v0.2.0/vgi-grammar-v0.2.0.jar
+curl -LO https://github.com/Query-farm/vgi-grammar/releases/download/v0.3.0/vgi-grammar-v0.3.0.jar
 ```
 
 then attach it from DuckDB (run from the directory holding the jar, or use its absolute path):
@@ -49,7 +49,7 @@ then attach it from DuckDB (run from the directory holding the jar, or use its a
 INSTALL vgi FROM community;
 LOAD vgi;
 
-ATTACH 'grammar' AS grammar (TYPE vgi, LOCATION 'java -jar vgi-grammar-v0.2.0.jar');
+ATTACH 'grammar' AS grammar (TYPE vgi, LOCATION 'java -jar vgi-grammar-v0.3.0.jar');
 
 -- Surface each grammar/spelling issue in a sentence with its rule, category, and
 -- suggested fixes.
@@ -64,7 +64,7 @@ SELECT grammar.main.grammar_count('I has two dog.') AS issue_count;
 - **Docker** (the image bundles the worker and a Java runtime):
 
   ```sql
-  ATTACH 'grammar' AS grammar (TYPE vgi, LOCATION 'docker://ghcr.io/query-farm/vgi-grammar:0.2.0');
+  ATTACH 'grammar' AS grammar (TYPE vgi, LOCATION 'docker://ghcr.io/query-farm/vgi-grammar:0.3.0');
   ```
 
 ### Build from source
