@@ -259,6 +259,9 @@ public final class Main {
                         + "language argument, with its human-readable name.")
                 .tags(tags)
                 .scanFunction("grammar_languages")
+                // Protocol 3.3 hides a table's scan function unless the table exposes
+                // it; grammar_languages() is a documented public table function too.
+                .exposeScan(true)
                 .cardinality(40L, 40L)
                 // VGI807/VGI806: `code` uniquely identifies each language row.
                 .constraints(grammarLanguagesConstraints(), "grammar_languages.v1".getBytes(StandardCharsets.UTF_8))

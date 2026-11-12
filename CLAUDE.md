@@ -71,12 +71,12 @@ Makefile                     build / test-unit / test-sql / test / clean
 
 ## SDK dependency & CI (self-contained via Maven Central)
 
-`farm.query:vgi:0.47.0` (pulls `farm.query:vgirpc` transitively; `vgirpc:0.33.3`
+`farm.query:vgi:0.48.0` (pulls `farm.query:vgirpc` transitively; `vgirpc:0.33.3`
 is declared explicitly since the code imports `farm.query.vgirpc.*`) and
 `org.languagetool:language-en:6.8` are all on **Maven Central**, so the build is
 fully self-contained: no sibling checkout, no `mavenLocal`, no composite build.
 The in-process test driver (`TestSupport`) constructs `TableInitParams` directly
-with the vgi `TableInitParams` record arity (25 components as of 0.47.0: a
+with the vgi `TableInitParams` record arity (25 components as of 0.48.0: a
 `bindOutputSchema` after `outputSchema`, and trailing `atUnit`, `atValue`,
 `storage`, `copyFrom`, `splitPayloads`). The 0.19.0 worker no longer attaches
 to the current community extension ("out-of-date Apache Arrow schema" on
@@ -101,7 +101,7 @@ See the README licensing table + LGPL note.
 
 ## VGI protocol / haybarn 2.0
 
-vgi 0.47.0 speaks VGI protocol **vgi.v3 / 3.2.0** (`/health` reports
+vgi 0.48.0 speaks VGI protocol **vgi.v3 / 3.3.0** (`/health` reports
 `"protocol":"vgi.v3"`); only haybarn **2.0**'s community `vgi` extension attaches
 it. CI resolves the newest `haybarn-v2.0.*` release, runs `haybarn-unittest
 --keep-home`, and gates metadata with `Query-farm/vgi-lint-check@v2`.
