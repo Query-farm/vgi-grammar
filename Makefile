@@ -16,7 +16,9 @@ TEST_DIR       = .
 TEST_PATTERN   = test/sql/*
 
 # The fat JAR is a self-contained VGI worker; its manifest sets Add-Opens so a
-# bare `java -jar` works as a LOCATION (no extra --add-opens needed).
+# bare `java -jar` works as a LOCATION (no extra --add-opens needed). test-sql
+# picks the NEWEST match (ls -t): after a version bump build/libs still holds the
+# old jar, and a name-sorted pick would silently test that stale build.
 JAR_GLOB       = build/libs/vgi-grammar-*-all.jar
 
 .PHONY: test test-unit test-sql build clean
@@ -36,7 +38,7 @@ test-sql: build
 		echo "  Then:    export PATH=\"\$$HOME/.local/bin:\$$PATH\"" >&2; \
 		exit 1; \
 	}
-	@JAR="$$(ls $(JAR_GLOB) | head -1)"; \
+	@JAR="$$(ls -t $(JAR_GLOB) | head -1)"; \
 	if [ -z "$$JAR" ]; then echo "ERROR: fat JAR not built ($(JAR_GLOB))" >&2; exit 1; fi; \
 	echo "Worker JAR: $$JAR"; \
 	VGI_GRAMMAR_WORKER="java -jar $$(pwd)/$$JAR" \

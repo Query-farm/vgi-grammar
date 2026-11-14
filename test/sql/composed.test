@@ -1,0 +1,81 @@
+# name: test/sql/composed.test
+# group: [vgi_grammar]
+#
+# Composed examples (ComposedExamples.java), the README "Combine them" block,
+# and the composed agent-task graders (vgi-agent-tests.yaml): several worker
+# functions in one query. Pins the rows each published description promises.
+
+require-env VGI_GRAMMAR_WORKER
+
+statement ok
+LOAD vgi;
+
+statement ok
+ATTACH 'grammar' AS grammar (TYPE vgi, LOCATION '${VGI_GRAMMAR_WORKER}');
+
+# ---- CORRECT_THEN_RECOUNT: grammar_count over correct ------------------------
+
+query TITI
+SELECT txt AS original, grammar.main.grammar_count(txt) AS issues_before, grammar.main.correct(txt) AS corrected, grammar.main.grammar_count(grammar.main.correct(txt)) AS issues_after FROM (VALUES ('Thanks for you order, it will ship tomorow.'), ('I could of done it better.'), ('This are a test of the the system.'), ('Your package has been delivered.')) AS t(txt) ORDER BY issues_after DESC, original
+----
+This are a test of the the system.	3	These is a test of the system.	1
+I could of done it better.	1	I could have done it better.	0
+Thanks for you order, it will ship tomorow.	2	Thanks for your order, it will ship tomorrow.	0
+Your package has been delivered.	0	Your package has been delivered.	0
+
+# ---- EXPLAIN_CORRECTION: grammar_check beside correct ------------------------
+
+query TTTT
+SELECT c.category, c.bad_text, c.suggestions[1] AS applied_fix, grammar.main.correct('Thanks for you order, it will ship tomorow.') AS corrected FROM grammar.main.grammar_check('Thanks for you order, it will ship tomorow.') AS c ORDER BY c."offset"
+----
+Possible Typo	you	your	Thanks for your order, it will ship tomorrow.
+Possible Typo	tomorow	tomorrow	Thanks for your order, it will ship tomorrow.
+
+# ---- FIX_ONLY_FAILING: is_grammatical gating correct (+ grammar_count) ------
+
+query TIT
+SELECT txt AS original, grammar.main.grammar_count(txt) AS issues, grammar.main.correct(txt) AS corrected FROM (VALUES ('Its a nice day, isnt it?'), ('Your package has been delivered.'), ('I could of done it better.')) AS t(txt) WHERE NOT grammar.main.is_grammatical(txt) ORDER BY issues DESC, original
+----
+Its a nice day, isnt it?	2	It's a nice day, isn't it?
+I could of done it better.	1	I could have done it better.
+
+# ---- README "Combine them" block --------------------------------------------
+
+query TTI
+SELECT txt, grammar.correct(txt) AS fixed,
+       grammar.grammar_count(grammar.correct(txt)) AS issues_left
+FROM (VALUES ('I could of done it better.'), ('This are a test of the the system.')) t(txt)
+ORDER BY txt;
+----
+I could of done it better.	I could have done it better.	0
+This are a test of the the system.	These is a test of the system.	1
+
+# ---- agent-task graders ------------------------------------------------------
+
+# auto-correct-text: the grader's sentence must correct to the right answer.
+query T
+SELECT grammar.main.correct('I has a apple.') AS corrected
+----
+I have an apple.
+
+# issues-left-after-correct: 2 issues before, 1 after.
+query II
+SELECT grammar.main.grammar_count('Their going too the store, its there problem.'), grammar.main.grammar_count(grammar.main.correct('Their going too the store, its there problem.')) AS n
+----
+2	1
+
+# sentences-not-fixed-by-correct
+query T
+SELECT txt AS original
+FROM (VALUES ('He dont know nothing about it.'), ('I could of done it better.'),
+             ('This are a test of the the system.'),
+             ('Thanks for you order, it will ship tomorow.'),
+             ('Your package has been delivered.')) AS t(txt)
+WHERE NOT grammar.main.is_grammatical(grammar.main.correct(txt))
+ORDER BY original
+----
+He dont know nothing about it.
+This are a test of the the system.
+
+statement ok
+DETACH grammar;

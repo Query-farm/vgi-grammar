@@ -82,7 +82,8 @@ public final class GrammarCheckFunction implements TableFunction {
                                 + "FROM grammar.main.grammar_check('Their going too the store, its there problem.') "
                                 + "GROUP BY category ORDER BY issues DESC\", "
                                 + "\"description\": \"Aggregate how many issues fall into each "
-                                + "LanguageTool category for a passage.\"}]")
+                                + "LanguageTool category for a passage.\"}, "
+                                + ComposedExamples.EXPLAIN_CORRECTION.json() + "]")
                 .withTag("vgi.executable_examples",
                         "[{\"description\": \"List every grammar/spelling issue in a sentence, "
                                 + "one row each.\", \"sql\": \"SELECT rule_id, category, message "

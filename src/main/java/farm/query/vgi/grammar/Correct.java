@@ -28,10 +28,11 @@ abstract class Correct extends ScalarFn {
     static final String EXAMPLE_QUERIES = "["
             + "{\"sql\": \"SELECT grammar.main.correct('She go to school evry day.');\", "
             + "\"description\": \"Auto-correct a sentence in the default language (fixes "
-            + "agreement and the 'evry' typo).\"},"
+            + "the agreement error; the 'evry' typo becomes the top suggestion 'very').\"},"
             + "{\"sql\": \"SELECT grammar.main.correct('I has two dog.', 'en-US');\", "
             + "\"description\": \"Auto-correct text in a specific language (fixes verb and "
-            + "noun agreement).\"}"
+            + "noun agreement).\"}, "
+            + ComposedExamples.CORRECT_THEN_RECOUNT.json()
             + "]";
 
     final GrammarEngine engine;
@@ -106,12 +107,15 @@ abstract class Correct extends ScalarFn {
                     .withTag("vgi.executable_examples",
                             "[{\"description\": \"Auto-correct a sentence in the default language.\", "
                                     + "\"sql\": \"SELECT grammar.main.correct('She go to school evry "
-                                    + "day.') AS fixed\"}]")
+                                    + "day.') AS fixed\"}, "
+                                    + ComposedExamples.CORRECT_THEN_RECOUNT.json() + "]")
                     .withExamples(List.of(new FunctionExample(
                             "SELECT grammar.main.correct('She go to school evry day.');",
-                            "Auto-correct a sentence in the default language "
-                                    + "(fixes agreement and the 'evry' typo).",
-                            "")));
+                            "Auto-correct a sentence in the default language (fixes the "
+                                    + "agreement error; the 'evry' typo becomes the top "
+                                    + "suggestion 'very').",
+                            ""),
+                            ComposedExamples.CORRECT_THEN_RECOUNT.functionExample()));
         }
 
         public void compute(

@@ -94,9 +94,10 @@ public final class Main {
                         + "clean), correction (rewrite text by applying the top suggested fix), and "
                         + "reference (discover the supported language codes).");
         // VGI152/VGI920: fixed agent-suitability suite (names + prompts only; the
-        // private graders live in vgi-agent-tests.yaml, VGI416). The six tasks
-        // cover all five worker objects (is_grammatical, grammar_count,
-        // grammar_check, correct, grammar_languages).
+        // private graders live in vgi-agent-tests.yaml, VGI416). The tasks cover
+        // all five worker objects (is_grammatical, grammar_count, grammar_check,
+        // correct, grammar_languages); the last two compose correct with
+        // grammar_count / is_grammatical (re-check a rewrite).
         t.put("vgi.agent_test_tasks", agentTestTasksJson());
         t.put("vgi.author", "Query.Farm");
         t.put("vgi.copyright", "Copyright 2026 Query Farm LLC - https://query.farm");
@@ -132,12 +133,23 @@ public final class Main {
                 + "{\"name\": \"detect-issue-in-text\", \"prompt\": \"When you check the sentence "
                 + "'She go to school every day.' for writing problems, does it have at "
                 + "least one issue? Return a single boolean value.\"}, "
-                + "{\"name\": \"auto-correct-text\", \"prompt\": \"Return the sentence 'I have "
-                + "thre aples.' rewritten with its spelling and grammar automatically "
+                + "{\"name\": \"auto-correct-text\", \"prompt\": \"Return the sentence 'I has "
+                + "a apple.' rewritten with its spelling and grammar automatically "
                 + "corrected.\"}, "
                 + "{\"name\": \"is-language-supported\", \"prompt\": \"Is the language code "
                 + "'en-GB' one of the languages this worker supports for grammar checking? "
-                + "Return a single boolean value.\"}"
+                + "Return a single boolean value.\"}, "
+                + "{\"name\": \"issues-left-after-correct\", \"prompt\": \"Auto-correct the "
+                + "sentence 'Their going too the store, its there problem.', then check the "
+                + "corrected text again. How many grammar, style, or spelling issues remain in "
+                + "the corrected sentence? Return the count as a single integer.\"}, "
+                + "{\"name\": \"sentences-not-fixed-by-correct\", \"prompt\": \"Auto-correct "
+                + "each of these sentences: 'He dont know nothing about it.', 'I could of done "
+                + "it better.', 'This are a test of the the system.', 'Thanks for you order, it "
+                + "will ship tomorow.', 'Your package has been delivered.'. Which original "
+                + "sentences still have at least one issue after auto-correction? Return one "
+                + "VARCHAR column, original, holding the original sentence text, sorted "
+                + "alphabetically.\"}"
                 + "]";
     }
 
@@ -202,7 +214,9 @@ public final class Main {
                         + "{\"sql\": \"SELECT code, name FROM grammar.main.grammar_languages "
                         + "WHERE code LIKE 'en-%' ORDER BY code\", "
                         + "\"description\": \"List the supported English language codes to pass "
-                        + "as the language argument.\"}]");
+                        + "as the language argument.\"}, "
+                        // Composed examples: two or more functions in one query.
+                        + ComposedExamples.jsonObjects(ComposedExamples.ALL) + "]");
         return t;
     }
 

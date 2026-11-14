@@ -25,10 +25,31 @@ tasks:
 
   - name: auto-correct-text
     reference_sql: |-
-      SELECT grammar.main.correct('I have thre aples.') AS corrected
+      SELECT grammar.main.correct('I has a apple.') AS corrected
     ignore_column_names: true
 
   - name: is-language-supported
     reference_sql: |-
       SELECT count(*) > 0 AS supported FROM grammar.main.grammar_languages WHERE code = 'en-GB'
+    ignore_column_names: true
+
+  # Composed: correct feeding grammar_count. The raw text has 2 issues; the
+  # rewrite ('Their going to the store, its their problem.') still has 1.
+  - name: issues-left-after-correct
+    reference_sql: |-
+      SELECT grammar.main.grammar_count(grammar.main.correct('Their going too the store, its there problem.')) AS n
+    ignore_column_names: true
+
+  # Composed: is_grammatical over correct. Two of the five rewrites still have
+  # issues; answering with the sentences that fail *before* correction (four)
+  # does not match.
+  - name: sentences-not-fixed-by-correct
+    reference_sql: |-
+      SELECT txt AS original
+      FROM (VALUES ('He dont know nothing about it.'), ('I could of done it better.'),
+                   ('This are a test of the the system.'),
+                   ('Thanks for you order, it will ship tomorow.'),
+                   ('Your package has been delivered.')) AS t(txt)
+      WHERE NOT grammar.main.is_grammatical(grammar.main.correct(txt))
+      ORDER BY original
     ignore_column_names: true

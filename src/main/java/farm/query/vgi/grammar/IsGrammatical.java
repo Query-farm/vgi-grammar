@@ -29,7 +29,8 @@ abstract class IsGrammatical extends ScalarFn {
             + " the default language (returns true).\"},"
             + "{\"sql\": \"SELECT grammar.main.is_grammatical('She don''t like it.', "
             + "'en-US');\", \"description\": \"Test grammaticality in a specific language "
-            + "(returns false - subject-verb agreement).\"}"
+            + "(returns false - subject-verb agreement).\"}, "
+            + ComposedExamples.FIX_ONLY_FAILING.json()
             + "]";
 
     final GrammarEngine engine;
@@ -105,7 +106,8 @@ abstract class IsGrammatical extends ScalarFn {
                             "SELECT grammar.main.is_grammatical('The quick brown fox jumps.');",
                             "Test whether a sentence is free of issues in the default language "
                                     + "(returns true).",
-                            "")));
+                            ""),
+                            ComposedExamples.FIX_ONLY_FAILING.functionExample()));
         }
 
         public void compute(

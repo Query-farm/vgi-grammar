@@ -29,6 +29,14 @@ SELECT grammar.is_grammatical('This sentence is correct.'); -- true
 
 -- Supported language codes:
 SELECT * FROM grammar.grammar_languages();
+
+-- Combine them: auto-correct a column, then re-count what one pass left behind.
+SELECT txt, grammar.correct(txt) AS fixed,
+       grammar.grammar_count(grammar.correct(txt)) AS issues_left
+FROM (VALUES ('I could of done it better.'), ('This are a test of the the system.')) t(txt)
+ORDER BY txt;
+-- 'I could have done it better.'    0
+-- 'These is a test of the system.'  1
 ```
 
 The worker is a self-contained, shaded fat JAR. Its manifest sets
