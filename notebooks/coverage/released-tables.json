@@ -1,0 +1,52 @@
+{
+  "query": "SELECT * FROM duckdb_tables() WHERE database_name='grammar' ORDER BY schema_name,table_name",
+  "columns": [
+    "database_name",
+    "database_oid",
+    "schema_name",
+    "schema_oid",
+    "table_name",
+    "table_oid",
+    "comment",
+    "tags",
+    "internal",
+    "temporary",
+    "has_primary_key",
+    "estimated_size",
+    "column_count",
+    "index_count",
+    "check_constraint_count",
+    "sql"
+  ],
+  "rows": [
+    [
+      "grammar",
+      22592,
+      "main",
+      22731,
+      "grammar_languages",
+      22732,
+      "One row per language code accepted by the grammar functions' language argument, with its human-readable name.",
+      {
+        "category": "grammar-and-style",
+        "domain": "text",
+        "topic": "proofreading",
+        "vgi.category": "Reference",
+        "vgi.doc_llm": "The language codes accepted by the `language` argument of the grammar functions (`grammar_check`, `grammar_count`, `is_grammatical`, `correct`), each with a human-readable name. This worker ships English only (`en-US`, `en-GB`, `en-CA`, ...). Query it to discover valid `language` values before passing one, or to build a picker.",
+        "vgi.doc_md": "## grammar.main.grammar_languages\n\nA table of every language code accepted by the `language` argument of the grammar functions, with its human-readable name. This worker ships English only (`en-US`, `en-GB`, `en-CA`, ...). Because it takes no arguments it is also exposed as a plain table, so you can query it with or without parentheses.",
+        "vgi.example_queries": "[{\"sql\": \"SELECT code, name FROM grammar.main.grammar_languages ORDER BY code\", \"description\": \"List every supported language code with its human-readable name, alphabetically.\"}, {\"sql\": \"SELECT code FROM grammar.main.grammar_languages WHERE code LIKE 'en-%' ORDER BY code\", \"description\": \"Filter to the English variants accepted by the language argument.\"}, {\"sql\": \"SELECT count(*) AS supported_languages FROM grammar.main.grammar_languages\", \"description\": \"Count how many language codes this worker accepts.\"}]",
+        "vgi.executable_examples": "[{\"description\": \"List every supported language code with its human-readable name.\", \"sql\": \"SELECT code, name FROM grammar.main.grammar_languages ORDER BY code\"}]",
+        "vgi.keywords": "[\"languages\",\"language codes\",\"locales\",\"supported\",\"en-US\",\"en-GB\",\"list languages\",\"discovery\",\"dialects\"]",
+        "vgi.title": "Supported Grammar Languages"
+      },
+      false,
+      false,
+      true,
+      0,
+      2,
+      1,
+      0,
+      "CREATE TABLE grammar_languages(code VARCHAR, \"name\" VARCHAR NOT NULL, PRIMARY KEY(code));"
+    ]
+  ]
+}

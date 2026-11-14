@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "repository": "Query-farm/vgi-grammar",
+  "revision": "v0.4.0",
+  "captured_at": "2026-11-14T19:14:08.877883+00:00",
+  "default_schema": "main",
+  "scope": "all_public_functions_and_tables",
+  "complete": true,
+  "evidence": [
+    {
+      "path": "coverage/released-functions.json",
+      "sha256": "cf623eadf88160ecbd932999c76a553351efd9ce419e802f67527799923738d7",
+      "description": "Complete worker-filtered functions export through actual published Haybarn"
+    },
+    {
+      "path": "coverage/released-tables.json",
+      "sha256": "e1a1dd0c0dc4bad37327d97fffb0ca35cc562ea264c856da8f7e6b26b93f1e1b",
+      "description": "Complete worker-filtered tables export through actual published Haybarn"
+    },
+    {
+      "path": "coverage/released-views.json",
+      "sha256": "d978a095ab34138507e1f5afee3c5e2f6a8a00f5fd531fd9d12887b0b98c7a88",
+      "description": "Complete worker-filtered views export through actual published Haybarn"
+    }
+  ],
+  "objects": [
+    {
+      "schema": "main",
+      "name": "correct",
+      "kind": "function",
+      "signatures": [
+        "correct(VARCHAR)"
+      ],
+      "authentication": "none",
+      "access": "read"
+    },
+    {
+      "schema": "main",
+      "name": "correct",
+      "kind": "function",
+      "signatures": [
+        "correct(VARCHAR, VARCHAR)"
+      ],
+      "authentication": "none",
+      "access": "read"
+    },
+    {
+      "schema": "main",
+      "name": "grammar_check",
+      "kind": "function",
+      "signatures": [
+        "grammar_check(VARCHAR, VARCHAR)"
+      ],
+      "authentication": "none",
+      "access": "read"
+    },
+    {
+      "schema": "main",
+      "name": "grammar_count",
+      "kind": "function",
+      "signatures": [
+        "grammar_count(VARCHAR)"
+      ],
+      "authentication": "none",
+      "access": "read"
+    },
+    {
+      "schema": "main",
+      "name": "grammar_count",
+      "kind": "function",
+      "signatures": [
+        "grammar_count(VARCHAR, VARCHAR)"
+      ],
+      "authentication": "none",
+      "access": "read"
+    },
+    {
+      "schema": "main",
+      "name": "grammar_languages",
+      "kind": "function",
+      "signatures": [
+        "grammar_languages()"
+      ],
+      "authentication": "none",
+      "access": "read"
+    },
+    {
+      "schema": "main",
+      "name": "is_grammatical",
+      "kind": "function",
+      "signatures": [
+        "is_grammatical(VARCHAR)"
+      ],
+      "authentication": "none",
+      "access": "read"
+    },
+    {
+      "schema": "main",
+      "name": "is_grammatical",
+      "kind": "function",
+      "signatures": [
+        "is_grammatical(VARCHAR, VARCHAR)"
+      ],
+      "authentication": "none",
+      "access": "read"
+    },
+    {
+      "schema": "main",
+      "name": "grammar_languages",
+      "kind": "table",
+      "signatures": [
+        "TABLE"
+      ],
+      "authentication": "none",
+      "access": "read"
+    }
+  ]
+}

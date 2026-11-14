@@ -1,0 +1,149 @@
+{
+  "description": "All language rows and correction/count/boolean outputs for nonempty, false factual claim, blank and NULL inputs agree across actual released/current runtimes.",
+  "results": {
+    "released": {
+      "languages": {
+        "columns": [
+          "code",
+          "name"
+        ],
+        "rows": [
+          [
+            "en",
+            "English"
+          ],
+          [
+            "en-AU",
+            "English (Australian)"
+          ],
+          [
+            "en-CA",
+            "English (Canadian)"
+          ],
+          [
+            "en-GB",
+            "English (GB)"
+          ],
+          [
+            "en-NZ",
+            "English (New Zealand)"
+          ],
+          [
+            "en-US",
+            "English (US)"
+          ],
+          [
+            "en-ZA",
+            "English (South African)"
+          ]
+        ]
+      },
+      "samples": {
+        "columns": [
+          "text",
+          "corrected",
+          "issues",
+          "flag"
+        ],
+        "rows": [
+          [
+            "He dont know nothing about it.",
+            "He don't know nothing about it.",
+            1,
+            false
+          ],
+          [
+            "The Moon is made of cheese.",
+            "The Moon is made of cheese.",
+            0,
+            true
+          ],
+          [
+            "",
+            "",
+            0,
+            true
+          ],
+          [
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    },
+    "current": {
+      "languages": {
+        "columns": [
+          "code",
+          "name"
+        ],
+        "rows": [
+          [
+            "en",
+            "English"
+          ],
+          [
+            "en-AU",
+            "English (Australian)"
+          ],
+          [
+            "en-CA",
+            "English (Canadian)"
+          ],
+          [
+            "en-GB",
+            "English (GB)"
+          ],
+          [
+            "en-NZ",
+            "English (New Zealand)"
+          ],
+          [
+            "en-US",
+            "English (US)"
+          ],
+          [
+            "en-ZA",
+            "English (South African)"
+          ]
+        ]
+      },
+      "samples": {
+        "columns": [
+          "text",
+          "corrected",
+          "issues",
+          "flag"
+        ],
+        "rows": [
+          [
+            "He dont know nothing about it.",
+            "He don't know nothing about it.",
+            1,
+            false
+          ],
+          [
+            "The Moon is made of cheese.",
+            "The Moon is made of cheese.",
+            0,
+            true
+          ],
+          [
+            "",
+            "",
+            0,
+            true
+          ],
+          [
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    }
+  }
+}

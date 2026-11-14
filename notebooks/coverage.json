@@ -1,0 +1,209 @@
+{
+  "schema_version": 1,
+  "catalogs": {
+    "released": {
+      "path": "coverage/catalog-released.json",
+      "sha256": "b153a19556a5c609bb6f5eac4f06225c22a394fc407d6a5a9d1014c961aaf636",
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex /root/notebooks_sympy",
+        "reviewed_at": "2026-11-14T19:26:21.662717+00:00",
+        "catalog_sha256": "b153a19556a5c609bb6f5eac4f06225c22a394fc407d6a5a9d1014c961aaf636",
+        "notes": "Complete native function/table/view exports through actual Haybarn attachments; cross-checked Main.java registrations and overload classes. Five logical names, with grammar_languages table/function aliases and scalar arities counted once. No objects excluded. All language rows and representative correction/count/boolean results agree between released/current runtimes; current metadata adds composed examples but does not change the demonstrated analytical behavior."
+      }
+    },
+    "current": {
+      "path": "coverage/catalog-current.json",
+      "sha256": "6f92f1399ba3e2f8d97fab8bf6bb996c88d4e941a446530a353fcb67729c5aaf",
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex /root/notebooks_sympy",
+        "reviewed_at": "2026-11-14T19:26:21.662717+00:00",
+        "catalog_sha256": "6f92f1399ba3e2f8d97fab8bf6bb996c88d4e941a446530a353fcb67729c5aaf",
+        "notes": "Complete native function/table/view exports through actual Haybarn attachments; cross-checked Main.java registrations and overload classes. Five logical names, with grammar_languages table/function aliases and scalar arities counted once. No objects excluded. All language rows and representative correction/count/boolean results agree between released/current runtimes; current metadata adds composed examples but does not change the demonstrated analytical behavior."
+      }
+    }
+  },
+  "notebooks": [
+    {
+      "path": "01_recheck_automatic_corrections.ipynb",
+      "sha256": "fcf1b47f14d8e30aa7cb5e3f30aa2761410516b6ffec6e3aebff52f8677faf0b",
+      "execution": {
+        "path": "coverage/run-01.json",
+        "sha256": "8874e6434c56882ead38442c937b6cc9473b0be9d84546c883de6687e034faac"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "object": {
+        "schema": "main",
+        "name": "grammar_languages"
+      },
+      "notebook": "01_recheck_automatic_corrections.ipynb",
+      "sql": [
+        {
+          "cell": "21a46639",
+          "reference": "grammar.main.grammar_languages"
+        }
+      ],
+      "narrative_cells": [
+        "8f4e04bb"
+      ],
+      "result_cells": [
+        "language-choice-finding"
+      ],
+      "interpretation_cells": [
+        "language-choice-finding"
+      ],
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex /root/notebooks_sympy",
+        "reviewed_at": "2026-11-14T19:26:21.662717+00:00",
+        "notebook_sha256": "fcf1b47f14d8e30aa7cb5e3f30aa2761410516b6ffec6e3aebff52f8677faf0b",
+        "catalog_sha256": [
+          "b153a19556a5c609bb6f5eac4f06225c22a394fc407d6a5a9d1014c961aaf636",
+          "6f92f1399ba3e2f8d97fab8bf6bb996c88d4e941a446530a353fcb67729c5aaf"
+        ],
+        "purpose": "Select a dialect advertised by the actual shipped rules before correcting text.",
+        "finding": "The released catalog advertises en-US; the notebook materializes available dialects and requires exactly that selected code before proceeding. All later calls explicitly use en-US; availability does not imply appropriateness for all authors."
+      }
+    },
+    {
+      "object": {
+        "schema": "main",
+        "name": "correct"
+      },
+      "notebook": "01_recheck_automatic_corrections.ipynb",
+      "sql": [
+        {
+          "cell": "3f8907b2",
+          "reference": "grammar.main.correct"
+        }
+      ],
+      "narrative_cells": [
+        "8a96a302"
+      ],
+      "result_cells": [
+        "3f8907b2"
+      ],
+      "interpretation_cells": [
+        "74035856"
+      ],
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex /root/notebooks_sympy",
+        "reviewed_at": "2026-11-14T19:26:21.662717+00:00",
+        "notebook_sha256": "fcf1b47f14d8e30aa7cb5e3f30aa2761410516b6ffec6e3aebff52f8677faf0b",
+        "catalog_sha256": [
+          "b153a19556a5c609bb6f5eac4f06225c22a394fc407d6a5a9d1014c961aaf636",
+          "6f92f1399ba3e2f8d97fab8bf6bb996c88d4e941a446530a353fcb67729c5aaf"
+        ],
+        "purpose": "Retain original text and candidate versions to assess what top-suggestion editing actually changes.",
+        "finding": "The first pass changes eight nonempty drafts from eleven detected matches to three, leaving two flagged drafts and increasing one original count. Version histories preserve exact wording; no monotonic-improvement or preserved-meaning claim is made."
+      }
+    },
+    {
+      "object": {
+        "schema": "main",
+        "name": "grammar_count"
+      },
+      "notebook": "01_recheck_automatic_corrections.ipynb",
+      "sql": [
+        {
+          "cell": "0a3c03cc",
+          "reference": "grammar.main.grammar_count"
+        }
+      ],
+      "narrative_cells": [
+        "86b7a71c"
+      ],
+      "result_cells": [
+        "74035856"
+      ],
+      "interpretation_cells": [
+        "74035856"
+      ],
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex /root/notebooks_sympy",
+        "reviewed_at": "2026-11-14T19:26:21.662717+00:00",
+        "notebook_sha256": "fcf1b47f14d8e30aa7cb5e3f30aa2761410516b6ffec6e3aebff52f8677faf0b",
+        "catalog_sha256": [
+          "b153a19556a5c609bb6f5eac4f06225c22a394fc407d6a5a9d1014c961aaf636",
+          "6f92f1399ba3e2f8d97fab8bf6bb996c88d4e941a446530a353fcb67729c5aaf"
+        ],
+        "purpose": "Recheck each materialized candidate rather than treating correction as successful proofreading.",
+        "finding": "The per-draft chart includes zero, reduced and increased counts. One originally single-match draft has two matches after a first fix, demonstrating why a new check is needed. Counts reflect this rule set, not a general quality score."
+      }
+    },
+    {
+      "object": {
+        "schema": "main",
+        "name": "is_grammatical"
+      },
+      "notebook": "01_recheck_automatic_corrections.ipynb",
+      "sql": [
+        {
+          "cell": "0a3c03cc",
+          "reference": "grammar.main.is_grammatical"
+        }
+      ],
+      "narrative_cells": [
+        "86b7a71c"
+      ],
+      "result_cells": [
+        "0a3c03cc"
+      ],
+      "interpretation_cells": [
+        "3c7ed94a"
+      ],
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex /root/notebooks_sympy",
+        "reviewed_at": "2026-11-14T19:26:21.662717+00:00",
+        "notebook_sha256": "fcf1b47f14d8e30aa7cb5e3f30aa2761410516b6ffec6e3aebff52f8677faf0b",
+        "catalog_sha256": [
+          "b153a19556a5c609bb6f5eac4f06225c22a394fc407d6a5a9d1014c961aaf636",
+          "6f92f1399ba3e2f8d97fab8bf6bb996c88d4e941a446530a353fcb67729c5aaf"
+        ],
+        "purpose": "Interpret the Boolean zero-match flag alongside actual input availability and factual limits.",
+        "finding": "The empty string returns true with count zero, NULL remains NULL, and the intentionally false Moon sentence remains unflagged. Availability is preserved separately and the flag is audited against count=0, not accepted as publication readiness."
+      }
+    },
+    {
+      "object": {
+        "schema": "main",
+        "name": "grammar_check"
+      },
+      "notebook": "01_recheck_automatic_corrections.ipynb",
+      "sql": [
+        {
+          "cell": "35ac08b7",
+          "reference": "grammar.main.grammar_check"
+        }
+      ],
+      "narrative_cells": [
+        "72a08a3e"
+      ],
+      "result_cells": [
+        "35ac08b7"
+      ],
+      "interpretation_cells": [
+        "72a08a3e"
+      ],
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex /root/notebooks_sympy",
+        "reviewed_at": "2026-11-14T19:26:21.662717+00:00",
+        "notebook_sha256": "fcf1b47f14d8e30aa7cb5e3f30aa2761410516b6ffec6e3aebff52f8677faf0b",
+        "catalog_sha256": [
+          "b153a19556a5c609bb6f5eac4f06225c22a394fc407d6a5a9d1014c961aaf636",
+          "6f92f1399ba3e2f8d97fab8bf6bb996c88d4e941a446530a353fcb67729c5aaf"
+        ],
+        "purpose": "Inspect the ordered suggestion and span behind a candidate edit, then reconcile detailed issues with scalar counts.",
+        "finding": "Detailed rows expose the original flagged span, category, rule and suggestions for draft4. Their number matches the original scalar count and UTF16 offsets identify the ASCII text. The subsequent version/count comparison shows that a local suggested fix can expose additional matches."
+      }
+    }
+  ]
+}

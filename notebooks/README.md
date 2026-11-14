@@ -1,102 +1,156 @@
-# Grammar notebooks
+# Grammar Checker notebooks
 
 [01 · Recheck automatic corrections before accepting them](01_recheck_automatic_corrections.ipynb)
-demonstrates `grammar_languages`, `correct`, `grammar_count`, `is_grammatical`, and
-`grammar_check` through visible SQL. Ten synthetic drafts retain their original text
-and each candidate version. Two charts compare detected rule matches and distinguish
-nonempty checked text from blank or missing drafts.
+checks ten synthetic English drafts, retains the original and each candidate version,
+and rechecks the worker's suggested edits. One first-pass correction exposes more
+matches. Another sentence has zero writing issues but makes an intentionally false
+claim. Blank and missing drafts remain separate from checked nonempty text.
 
-The default first pass changes the eight nonempty drafts' total detected matches
-from 11 to 3, with two drafts still flagged. One draft goes from one match to two.
-The second-pass experiment leaves zero detected matches in this constructed sample;
-it does not establish factual accuracy, preserved meaning, or editorial approval.
-No draft is sent anywhere: the worker runs LanguageTool locally.
+[Open in Colab](https://colab.research.google.com/github/Query-farm/vgi-grammar/blob/main/notebooks/01_recheck_automatic_corrections.ipynb)
+and run all. The bootstrap installs only the base
+[shared package v0.3.9](https://github.com/Query-farm/vgi-example-notebooks/tree/v0.3.9),
+which owns the catalog-title heading standard, branding, SVG presentation and
+hash-verified companion retrieval. Local publication uses its `[runner]` extra.
+GitHub shows linked SVG assets; Jupyter and Colab reruns show native SVG.
 
-## Run
+## Run locally
 
-Install [uv](https://docs.astral.sh/uv/) and Java 21 or newer. Put `java` on `PATH`;
-on macOS with Homebrew Java, this may require adding
-`/opt/homebrew/opt/openjdk@21/bin`. The companion's cache lock supports macOS/Linux.
-The initial run needs network access for the Python environment, VGI extension,
-and approximately 97 MB released JAR. Language rules run offline after installation.
-
-From the repository root:
+Install Git and [uv](https://docs.astral.sh/uv/). From this directory:
 
 ```sh
-uv sync --project notebooks --frozen
-uv run --project notebooks --frozen python notebooks/execute.py
+uv sync --locked
+uv run --locked vgi-notebooks 01_recheck_automatic_corrections.ipynb --timeout 300
 ```
 
-The complete `notebooks/` directory also works independently of the worker checkout:
+In a Jupyter editor select `notebooks/.venv/bin/python`, restart the kernel, and run
+all. The command above provides its own temporary kernel specification. No local
+worker build, Gradle installation or system Java is needed for the notebook.
+The Python environment locks Haybarn 2.0.0rc11; no engine build is required.
 
-```sh
-cd notebooks
-uv sync --frozen
-uv run --frozen python execute.py
-```
+## Release and managed Java
 
-In an editor, select `notebooks/.venv/bin/python`, use `notebooks/` as the kernel
-working directory, and restart/run all. The connection and analytical parameter
-remain visible; import, plotting, assertion and cleanup code is folded. Useful
-outputs are saved in the notebook. Charts use Seaborn styling and Matplotlib.
-
-Run the single-parameter experiment into a separate directory:
-
-```sh
-uv run --project notebooks --frozen python notebooks/execute.py \
-  --parameters '{"CORRECTION_PASSES":2}' \
-  --output-dir notebooks/validation/two-passes
-```
-
-The runner uses a fresh kernel and only replaces a saved notebook after successful
-execution. Overrides require a separate output directory; unknown parameters are
-rejected. The default remains unchanged if a run fails. Chart review PNGs are saved
-under ignored `notebooks/validation/charts/`; the notebook embeds them as well.
-
-## Portable release connection
-
-The visible SQL uses a literal location:
+The visible teaching connection stays explicit about the released worker:
 
 ```sql
+INSTALL vgi FROM community;
+LOAD vgi;
 ATTACH 'grammar' (TYPE vgi,
- LOCATION 'uv run --frozen --project . python release_jar.py Query-farm/vgi-grammar v0.4.0 vgi-grammar-v0.4.0.jar 83586bbdaba1a3bfb59a3d17810e00259c53d5554cdac5d4ba8cd5b09628a02d');
+ LOCATION 'uv run --locked --no-project --python 3.13 grammar_release.py v0.4.0');
 ```
 
-[`release_jar.py`](release_jar.py) downloads the public
-[v0.4.0 JAR](https://github.com/Query-farm/vgi-grammar/releases/tag/v0.4.0),
-checks its pinned SHA-256, and starts Java. Cached bytes are checked on every launch;
-downloads use a bounded POSIX lock and atomic file publication. The cache lives
-under `${XDG_CACHE_HOME:-~/.cache}/vgi-notebook-jars/`.
-No Gradle, worker build, credential, or sibling checkout is needed for the notebook.
-Its separate lock uses Haybarn 2.0.0rc11 without changing repository Java dependencies.
+The reviewed [launcher](grammar_release.py) and its [script lock](grammar_release.py.lock)
+are retrieved through shared registry `grammar`, pinned to public source commit
+`c65166c49a5d3949b1fd839f7b4886ea11f84f4c`. The wrapper accepts only its reviewed
+release. It downloads `vgi-grammar-v0.4.0.jar` from the public v0.4.0 release and
+requires SHA-256 `83586bbdaba1a3bfb59a3d17810e00259c53d5554cdac5d4ba8cd5b09628a02d`.
+Cached JAR bytes are rechecked on every launch. Downloads use a bounded POSIX lock
+and atomic publication under `${XDG_CACHE_HOME:-~/.cache}/vgi-notebook-jars/`.
+
+The separate PEP 723 launcher environment pins
+[jdk4py 21.0.8.2](https://pypi.org/project/jdk4py/21.0.8.2/), supplying Java 21.0.8.
+It uses that package's absolute Java binary and verifies its actual `-version`
+response before starting the worker. It neither trusts system Java nor installs a
+Java package into the notebook kernel. The lock records the managed-runtime wheel
+hashes. The launcher supports macOS and glibc Linux on x86-64/arm64, including
+Colab's Linux platform; its POSIX locking implementation does not support Windows.
+Initial setup downloads Python packages, the managed runtime, the approximately
+97 MB worker JAR and the VGI extension. Language checks then run locally, with no
+hosted model, LanguageTool API, credentials or messages.
+
+Optional preflight, from this directory:
+
+```sh
+uv run --locked --no-project --python 3.13 grammar_release.py --check-runtime v0.4.0
+uv run --locked --no-project --python 3.13 grammar_release.py --verify-only v0.4.0
+```
+
+Changing a release requires reviewing its artifact, digest and managed-runtime
+compatibility, then rerunning the default and experiment. The notebook's shared
+connection starts with an empty temporary SQL-secret directory and persistent
+secrets disabled.
+
+## One-parameter experiment
+
+Change only the number of correction passes, preserving the default:
+
+```sh
+uv run --locked vgi-notebooks 01_recheck_automatic_corrections.ipynb \
+  --parameters '{"CORRECTION_PASSES":2}' \
+  --output-dir artifacts/two-passes --timeout 300
+```
+
+The first pass changes the eight nonempty drafts' total detected matches from
+**11 to 3**, with **two drafts** still flagged; one draft gains a match. The second
+pass leaves **zero detected matches** in this constructed sample. Original text,
+blank/missing states and the false factual claim remain preserved. Inspect exact
+wording as well as counts; this is not a benchmark or proof of convergence,
+preserved meaning, factual accuracy, or editorial approval.
+
+Overrides require a separate output directory, unknown names are rejected, and
+failed runs preserve the previous successful default. Generated review PNGs, logs,
+companion caches and experiment copies are ignored. A notebook-only copy retrieves
+its immutable launcher and lock through the bootstrap; no manual cloning is needed.
 
 ## What the results mean
 
-The release ships LanguageTool 6.8 English rules. `en-US` is fixed in this example;
-other dialects can produce different matches. The first suggestion is not a verified
-statement of author intent. The worker applies non-overlapping replacements from
-right to left and can expose new matches on a subsequent check.
+The release ships LanguageTool 6.8 English rules. The notebook materializes the
+actual supported-language list, selects and requires `en-US`, and uses that code
+explicitly for every correction and recheck. Another dialect may produce different
+matches. A supported language is not a promise that its rules fit every author's
+context.
 
-In the actual v0.4.0 release, empty text returns count `0` and flag `true`; SQL NULL
-returns NULL for both. The notebook explicitly demonstrates this behavior and keeps
-the empty and missing records outside the nonempty comparison. An internal scalar
-error can also return NULL, so unavailable results are never filled with zero.
-The intentionally false sentence about the Moon demonstrates that zero detected
-writing issues is not fact checking.
+`correct` applies each first suggestion from right to left and skips overlaps.
+It can expose new matches on a later pass. The notebook retains all ten row IDs and
+every requested version rather than overwriting the source. `grammar_count` and
+`is_grammatical` report rule-match results, not a general writing-quality score.
+The release returns **0 / true for empty text** and **NULL / NULL for SQL NULL**.
+An internal per-row scalar error can also return NULL, so unavailable results stay
+visible rather than becoming zero. The false Moon sentence demonstrates that a
+zero count is not fact checking.
 
-`grammar_check` accepts literal text and returns one row per issue. Scalar functions
-process a text column. Detailed offsets use zero-based Java UTF-16 units; all example
-text is ASCII. Counts from the issue table reconcile with the scalar count for the
-same sentence. The ten SQL audit checks preserve row identity, version count, original
-text, empty/null behavior, scalar agreement, and detailed spans; they do not impose
-a monotonic-improvement or publication-readiness assertion.
+`grammar_check` explains the issue behind one edit with a rule, category, flagged
+span and ordered suggestions. Its detailed count reconciles with the scalar count
+for the same original text. Offsets use zero-based Java UTF-16 units; the synthetic
+sample is ASCII. Ten SQL checks reconcile versions, row identity, original text,
+availability, scalar agreement and detailed spans. They intentionally do not assert
+that every edit improves the text or that a zero count means it is ready to publish.
 
-Validation includes default execution, the two-pass experiment from a detached
-notebooks-only directory, chart review, runner guards, and notebook lint. Repository
-checks passed 12 JUnit tests, 71 stdio / 77 HTTP / 71 Unix SQL assertions across three
-cases per transport, and executed metadata lint at 100/100 L2 with zero findings.
-Source checks build the worker for testing; notebook execution uses the release JAR.
+## Coverage and provenance
 
-The worker is MIT licensed; LanguageTool is LGPL-2.1. See the repository's licensing
-details. Unmodified official branding links to [Query.Farm](https://query.farm/)
-and [VGI](https://query.farm/vgi/).
+[coverage.json](coverage.json) records meaningful visible executed SQL for all
+**five of five** public logical names: supported languages, correction, issue count,
+zero-match flag and detailed issue rows. Arity overloads and the language table/function
+alias are counted once. Complete released and current function/table/view exports
+are retained separately. The proper notebook title and subtitle come from the
+released catalog's actual metadata.
+
+The notebook executes released v0.4.0. Current public baseline
+`8f32a700ae059c9b8cc82f5d22fc98907d10f873` has the same named interface; its additional
+composed metadata examples do not change the demonstrated engine behavior. All
+supported-language rows and representative correction/count/Boolean outputs agree
+across both actual runtimes. Reviewed current-interface coverage is distinct from
+exact current-runtime notebook execution.
+
+Verification passed: 16 code cells, eight SQL cells, two SVG charts, ten SQL audit
+checks and the selected-dialect gate. The default took 90.6 seconds; the detached
+two-pass experiment took 79.1 seconds with empty companion, managed-runtime and
+JAR caches. Both companions and the downloaded JAR matched their pinned hashes.
+All four figures were reviewed. Three runner protections and two parameter
+rejections preserved the saved default.
+
+A fresh Python 3.12 kernel ran the notebook after base-only installation with
+pandas 2.2.3, Matplotlib 3.10.0, IPython 8.30.0, ipykernel 6.17.1 and
+jupyter-client 7.4.9 already imported. Their versions remained unchanged,
+`pip check` passed, and neither the local runner nor `jdk4py` was installed in
+that kernel. Separate real-worker probes passed with system Java missing and with
+a deliberately old Java executable; neither invoked system Java. This is local
+compatibility testing, not a claim of a manual hosted-Colab execution.
+
+Source validation passed 12 freshly run JUnit tests, 71/77/71 SQL assertions over
+stdio/HTTP/Unix, and executed metadata validation (100/100, L2, zero findings).
+The existing green source CI baseline is retained for this notebook-only change;
+no container publication is triggered.
+
+Worker code is MIT licensed; LanguageTool is LGPL-2.1. The managed OpenJDK package
+has its own runtime licensing, linked from its package documentation. Worker source,
+Java build files and dependency declarations remain unchanged.
