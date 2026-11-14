@@ -45,6 +45,9 @@ directly as a VGI `LOCATION` with no extra JVM flags.
 
 ## Quick start
 
+For an executed SQL walkthrough with charts and a portable release connection, see
+the [Grammar notebooks](notebooks/README.md).
+
 Every [GitHub release](https://github.com/Query-farm/vgi-grammar/releases) ships a self-contained worker jar. It needs Java 21 or newer. Download it:
 
 ```sh
