@@ -71,7 +71,7 @@ Makefile                     build / test-unit / test-sql / test / clean
 
 ## SDK dependency & CI (self-contained via Maven Central)
 
-`farm.query:vgi:0.48.0` (pulls `farm.query:vgirpc` transitively; `vgirpc:0.33.3`
+`farm.query:vgi:0.50.1` (pulls `farm.query:vgirpc` transitively; `vgirpc:0.34.1`
 is declared explicitly since the code imports `farm.query.vgirpc.*`) and
 `org.languagetool:language-en:6.8` are all on **Maven Central**, so the build is
 fully self-contained: no sibling checkout, no `mavenLocal`, no composite build.
@@ -101,9 +101,11 @@ See the README licensing table + LGPL note.
 
 ## VGI protocol / haybarn 2.0
 
-vgi 0.48.0 speaks VGI protocol **vgi.v3 / 3.3.0** (`/health` reports
-`"protocol":"vgi.v3"`); only haybarn **2.0**'s community `vgi` extension attaches
-it. CI resolves the newest `haybarn-v2.0.*` release, runs `haybarn-unittest
+vgi 0.50.1 speaks VGI protocol **vgi.v3 / 3.4.0** (`/health` reports
+`"protocol":"vgi.v3"`); major+minor must match exactly, so only the 3.4 `vgi`
+extension attaches it: Haybarn **2.0.1** (`INSTALL vgi FROM community`; Haybarn
+2.0.0 still serves the 3.3 build) or stock DuckDB 2.0 (`FROM query_farm`). CI
+resolves the newest `haybarn-v2.0.1*` release, runs `haybarn-unittest
 --keep-home`, and gates metadata with `Query-farm/vgi-lint-check@v2`.
 Catalog-table constraints are canonical `ConstraintRecord`s passed to
 `CatalogTable.Builder#constraints(..)`; the legacy `.primaryKey(..)` builders throw

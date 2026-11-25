@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "farm.query"
-version = "0.4.1"
+version = "0.5.0"
 
 repositories {
     // The VGI Java SDK is published to Maven Central as farm.query:vgi /
@@ -41,8 +41,8 @@ dependencies {
     // VGI Java SDK from Maven Central. `vgi` is the worker/catalog API and pulls
     // in farm.query:vgirpc transitively; vgirpc is declared explicitly because
     // the code imports farm.query.vgirpc.* directly.
-    implementation("farm.query:vgi:0.48.1")
-    implementation("farm.query:vgirpc:0.33.4")
+    implementation("farm.query:vgi:0.50.1")
+    implementation("farm.query:vgirpc:0.34.1")
 
     // LanguageTool — LGPL-2.1. Used here as an UNMODIFIED, standard, swappable
     // Maven dependency (the LGPL relink/replace obligation is satisfied by it
